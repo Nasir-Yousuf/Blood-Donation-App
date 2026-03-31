@@ -1,0 +1,162 @@
+[
+  {
+    "name": "Nasir Ahmed",
+    "email": "nasir.ahmed@example.com",
+    "password": "hashed_password",
+    "role": "donor",
+    "bloodType": "A+",
+    "location": "Dhaka",
+    "isAvailable": true
+  },
+  {
+    "name": "Rahim Uddin",
+    "email": "rahim.uddin@example.com",
+    "password": "hashed_password",
+    "role": "donor",
+    "bloodType": "B+",
+    "location": "Rajshahi",
+    "isAvailable": true
+  },
+  {
+    "name": "Karim Hasan",
+    "email": "karim.hasan@example.com",
+    "password": "hashed_password",
+    "role": "donor",
+    "bloodType": "O+",
+    "location": "Chattogram",
+    "isAvailable": false
+  },
+  {
+    "name": "Sadia Islam",
+    "email": "sadia.islam@example.com",
+    "password": "hashed_password",
+    "role": "donor",
+    "bloodType": "AB+",
+    "location": "Khulna",
+    "isAvailable": true
+  },
+  {
+    "name": "Tanvir Hossain",
+    "email": "tanvir.hossain@example.com",
+    "password": "hashed_password",
+    "role": "requester",
+    "bloodType": "A-",
+    "location": "Sylhet",
+    "isAvailable": false
+  },
+  {
+    "name": "Farhana Akter",
+    "email": "farhana.akter@example.com",
+    "password": "hashed_password",
+    "role": "donor",
+    "bloodType": "O-",
+    "location": "Barishal",
+    "isAvailable": true
+  },
+  {
+    "name": "Imran Chowdhury",
+    "email": "imran.chowdhury@example.com",
+    "password": "hashed_password",
+    "role": "donor",
+    "bloodType": "B-",
+    "location": "Comilla",
+    "isAvailable": false
+  },
+  {
+    "name": "Nusrat Jahan",
+    "email": "nusrat.jahan@example.com",
+    "password": "hashed_password",
+    "role": "donor",
+    "bloodType": "AB-",
+    "location": "Rangpur",
+    "isAvailable": true
+  },
+  {
+    "name": "Shakib Al Hasan",
+    "email": "shakib.hasan@example.com",
+    "password": "hashed_password",
+    "role": "donor",
+    "bloodType": "O+",
+    "location": "Dhaka",
+    "isAvailable": true
+  },
+  {
+    "name": "Mithila Rahman",
+    "email": "mithila.rahman@example.com",
+    "password": "hashed_password",
+    "role": "requester",
+    "bloodType": "A+",
+    "location": "Mymensingh",
+    "isAvailable": false
+  },
+  {
+    "id": "[object Object]1",
+    "name": "Rahim Uddin",
+    "email": "rahim.uddin@example.com",
+    "password": "hashed_password",
+    "role": "donor",
+    "bloodType": "B+",
+    "location": "Rajshahi",
+    "isAvailable": true
+  },
+  {
+    "id": "[object Object]1",
+    "name": "Rahim Uddin",
+    "email": "rahim.uddin@example.com",
+    "password": "hashed_password",
+    "role": "donor",
+    "bloodType": "B+",
+    "location": "Rajshahi",
+    "isAvailable": true
+  },
+  {
+    "id": "[object Object]1",
+    "name": "Rahim Uddin",
+    "email": "rahim.uddin@example.com",
+    "password": "hashed_password",
+    "role": "donor",
+    "bloodType": "B+",
+    "location": "Rajshahi",
+    "isAvailable": true
+  },
+  {
+    "id": "[object Object]1",
+    "name": "Rahim Uddin",
+    "email": "rahim.uddin@example.com",
+    "password": "hashed_password",
+    "role": "donor",
+    "bloodType": "B+",
+    "location": "Rajshahi",
+    "isAvailable": true
+  },
+  {
+    "id": "[object Object]1",
+    "name": "Rahim Uddin",
+    "email": "rahim.uddin@example.com",
+    "password": "hashed_password",
+    "role": "donor",
+    "bloodType": "B+",
+    "location": "Rajshahi",
+    "isAvailable": true
+  },
+  {
+    "id": 16,
+    "name": "Rahim Uddin",
+    "email": "rahim.uddin@example.com",
+    "password": "hashed_password",
+    "role": "donor",
+    "bloodType": "B+",
+    "location": "Rajshahi",
+    "isAvailable": true
+  },
+  {
+    "id": 17,
+    "name": "Rahim Uddin",
+    "email": "rahim.uddin@example.com",
+    "password": "hashed_password",
+    "role": "donor",
+    "bloodType": "B+",
+    "location": "Rajshahi",
+    "isAvailable": true
+  }
+]

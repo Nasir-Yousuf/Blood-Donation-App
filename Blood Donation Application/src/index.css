@@ -1,0 +1,45 @@
+@import 'tailwindcss';
+
+/* 1. Import Manrope from Google Fonts */
+@import url('https://fonts.googleapis.com');
+
+@theme {
+  /* 2. Register the font family */
+  --font-manrope: 'Manrope', sans-serif;
+
+  /* 3. Register your custom "Editorial" sizes */
+  --font-size-display-lg: 3.5rem;
+  --font-size-headline-md: 1.75rem;
+}
+
+@layer components {
+  .input {
+    @apply rounded-full border-stone-200 bg-yellow-50 px-4 py-2 text-sm transition-all duration-300 placeholder:text-stone-400 focus:ring focus:ring-yellow-500 md:px-6 md:py-3;
+  }
+}
+@layer components {
+  .primaryBg {
+    @apply bg-[#D32F2F];
+  }
+  .secondaryBg {
+    @apply bg-[#bf574f];
+  }
+  .tertiaryBg {
+    @apply bg-[#00799c];
+  }
+  .neutralBg {
+    @apply bg-[#F5F5F5];
+  }
+  .primary {
+    @apply text-[#D32F2F];
+  }
+  .secondary {
+    @apply text-[#bf574f];
+  }
+  .tertiary {
+    @apply text-[#00799c];
+  }
+  .neutral {
+    @apply text-[#F5F5F5];
+  }
+}
