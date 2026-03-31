@@ -58,7 +58,7 @@ Built to solve real-world problems by connecting blood donors with recipients ef
 
 ## 📷 Screenshots
 
-(Add screenshots here later)
+(Coming soon)
 
 ---
 
