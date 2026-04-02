@@ -8,5 +8,29 @@
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-hook-form": "^7.72.0"
-  }
+  },
+  "name": "blood-donation-application",
+  "version": "1.0.0",
+  "description": "A full-stack MERN application that connects blood donors with people in need through location-based search and emergency request features.",
+  "main": "index.js",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix server\" \"npm start --prefix client\"",
+    "server": "npm run dev --prefix server",
+    "client": "npm start --prefix client"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nasir-Yousuf/Blood-Donation-App.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Nasir-Yousuf/Blood-Donation-App/issues"
+  },
+  "homepage": "https://github.com/Nasir-Yousuf/Blood-Donation-App#readme"
 }
