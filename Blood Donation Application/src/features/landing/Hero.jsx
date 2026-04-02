@@ -26,10 +26,11 @@ export default function Hero() {
           </p>
           <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row sm:gap-4 md:justify-start">
             <Button variant="primary">
-              <Link to="/donor">Become a Donor </Link>
+              <Link to="/registration">Become a Donor </Link>
             </Button>
-
-            <Button variant="secondary">Find Donor</Button>
+            <Link to="/emergency">
+              <Button variant="secondary">Find Donor</Button>{' '}
+            </Link>
           </div>
         </div>
 

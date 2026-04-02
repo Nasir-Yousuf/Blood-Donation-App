@@ -1,64 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 // ==========================================
-// 1. MOCK API DATA
+// 1. STATIC DATA & HELPERS
 // ==========================================
-const MOCK_DONORS = [
-  {
-    id: 1,
-    name: 'Marcus Sterling',
-    distance: '2.5km away',
-    location: 'Camden',
-    bloodType: 'O+',
-    groupLabel: 'O POS',
-    tags: [{ text: 'REGULAR DONOR', type: 'blue' }],
-    avatar: 'https://i.pravatar.cc/150?img=11',
-    isOnline: true,
-  },
-  {
-    id: 2,
-    name: 'Elena Rodriguez',
-    distance: '3.8km away',
-    location: 'Westminster',
-    bloodType: 'A-',
-    groupLabel: 'A NEG',
-    tags: [{ text: 'VERIFIED', type: 'gray' }],
-    avatar: 'https://i.pravatar.cc/150?img=5',
-    isOnline: true,
-  },
-  {
-    id: 3,
-    name: 'Samuel Chen',
-    distance: '5.2km away',
-    location: 'Islington',
-    bloodType: 'B+',
-    groupLabel: 'B POS',
-    tags: [{ text: 'ELITE MEMBER', type: 'blue' }],
-    avatar: 'https://i.pravatar.cc/150?img=8',
-    isOnline: true,
-  },
-  {
-    id: 4,
-    name: 'Dr. Sarah Jenkins',
-    distance: '1.2 miles away',
-    location: 'Downtown Medical Center',
-    bloodType: 'O-',
-    groupLabel: 'TYPE',
-    tags: [
-      { text: 'Available Now', type: 'status-blue' },
-      { text: 'Last donated: 4 months ago', type: 'text' },
-    ],
-    avatar: 'https://i.pravatar.cc/150?img=32',
-    isOnline: false,
-  },
-];
-
 const MOCK_BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
+
+// Helper to format blood type for the small badge (e.g., "A+" -> "A POS")
+const formatGroupLabel = (bloodType) => {
+  if (!bloodType) return '';
+  return bloodType.replace('+', ' POS').replace('-', ' NEG');
+};
 
 // ==========================================
 // 2. SUB-COMPONENTS
 // ==========================================
-
 const Header = () => (
   <div className="mb-6 flex flex-col justify-between gap-4 md:flex-row md:items-center">
     <div>
@@ -131,7 +87,7 @@ const MobileFilters = () => (
     </div>
     <div className="flex shrink-0 items-center gap-2 rounded-full border border-gray-200 bg-gray-100 px-4 py-2">
       <span className="text-xs font-bold text-gray-500">LOCATION</span>
-      <span className="text-sm font-bold text-gray-800">London, UK</span>
+      <span className="text-sm font-bold text-gray-800">Local Area</span>
     </div>
   </div>
 );
@@ -141,7 +97,6 @@ const DesktopSidebar = () => {
 
   return (
     <div className="hidden w-[300px] shrink-0 flex-col gap-6 lg:flex">
-      {/* Filters Card */}
       <div className="rounded-[20px] border border-gray-100 bg-[#F8F9FA] p-6 shadow-sm">
         <div className="mb-6 flex items-center gap-2">
           <svg
@@ -161,7 +116,6 @@ const DesktopSidebar = () => {
           <h2 className="font-bold text-gray-900">Search Filters</h2>
         </div>
 
-        {/* Blood Group Filter */}
         <div className="mb-6">
           <p className="mb-3 text-xs font-bold tracking-wider text-gray-500 uppercase">
             Blood Group
@@ -179,7 +133,6 @@ const DesktopSidebar = () => {
           </div>
         </div>
 
-        {/* Location Filter */}
         <div className="mb-6">
           <p className="mb-3 text-xs font-bold tracking-wider text-gray-500 uppercase">
             Location
@@ -215,7 +168,6 @@ const DesktopSidebar = () => {
           </div>
         </div>
 
-        {/* Availability Filter */}
         <div className="mb-8">
           <p className="mb-3 text-xs font-bold tracking-wider text-gray-500 uppercase">
             Availability
@@ -246,7 +198,6 @@ const DesktopSidebar = () => {
         </button>
       </div>
 
-      {/* Emergency Promo (Desktop only) */}
       <div className="rounded-[20px] bg-[#007A99] p-6 text-white">
         <h3 className="mb-2 text-lg font-bold">Emergency?</h3>
         <p className="mb-5 text-sm leading-relaxed text-blue-100">
@@ -263,7 +214,6 @@ const DesktopSidebar = () => {
 const DonorCard = ({ donor }) => (
   <div className="flex flex-col justify-between rounded-2xl border border-gray-50 bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.04)] md:p-5">
     <div className="flex gap-4">
-      {/* Avatar */}
       <div className="relative shrink-0">
         <img
           src={donor.avatar}
@@ -275,7 +225,6 @@ const DonorCard = ({ donor }) => (
         )}
       </div>
 
-      {/* Details */}
       <div className="flex-1">
         <div className="flex items-start justify-between">
           <div>
@@ -311,7 +260,6 @@ const DonorCard = ({ donor }) => (
             </div>
           </div>
 
-          {/* Blood Badge */}
           <div className="flex shrink-0 flex-col items-center justify-center rounded-xl border border-red-100 bg-red-100/60 px-2 py-1 md:px-3 md:py-2">
             <span className="text-[9px] leading-none font-bold text-red-800 uppercase md:text-[10px]">
               {donor.groupLabel}
@@ -322,7 +270,6 @@ const DonorCard = ({ donor }) => (
           </div>
         </div>
 
-        {/* Tags */}
         <div className="mt-3 flex flex-wrap gap-2 md:mt-4">
           {donor.tags.map((tag, idx) => (
             <span
@@ -344,9 +291,7 @@ const DonorCard = ({ donor }) => (
       </div>
     </div>
 
-    {/* Actions */}
     <div className="mt-4 flex gap-3 md:mt-5">
-      {/* Message Button (Visible mostly on Desktop as per design) */}
       <button className="hidden flex-1 items-center justify-center gap-2 rounded-xl border border-red-200 py-2.5 font-bold text-red-700 transition-colors hover:bg-red-50 md:flex">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -419,6 +364,48 @@ const MobilePromoMap = () => (
 // 3. MAIN PAGE LAYOUT
 // ==========================================
 export default function SearchDonor() {
+  const [donors, setDonors] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch data from the API when component mounts
+  useEffect(() => {
+    const fetchDonors = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:3000/api/v1/users/');
+
+        // Map the API data structure to the format our UI expects
+        const mappedDonors = response.data.data.users.map((user) => ({
+          id: user._id,
+          name: user.name,
+          // Extracting coordinates for display. Longitude is index 0, Latitude is index 1 in GeoJSON
+          location: `Lat: ${user.location.coordinates[1].toFixed(2)}, Lng: ${user.location.coordinates[0].toFixed(2)}`,
+          distance: 'Location matched', // Placeholder since we can't calculate exact distance without a target origin
+          bloodType: user.bloodType,
+          groupLabel: formatGroupLabel(user.bloodType),
+          isOnline: user.isAvailable,
+          // Generate deterministic avatar based on their ID
+          avatar: `https://i.pravatar.cc/150?u=${user._id}`,
+          tags: [
+            user.isAvailable
+              ? { text: 'Available Now', type: 'status-blue' }
+              : { text: 'Unavailable', type: 'gray' },
+            { text: user.role.toUpperCase(), type: 'blue' },
+          ],
+        }));
+
+        setDonors(mappedDonors);
+        setIsLoading(false);
+      } catch (err) {
+        console.error('Error fetching donors:', err);
+        setError('Failed to load donors. Please try again later.');
+        setIsLoading(false);
+      }
+    };
+
+    fetchDonors();
+  }, []);
+
   return (
     <div className="relative min-h-screen bg-[#F4F5F7] pb-20 font-sans text-gray-900 md:pb-10 lg:bg-white">
       <div className="mx-auto max-w-7xl px-4 pt-6 md:px-8 md:pt-10">
@@ -435,11 +422,13 @@ export default function SearchDonor() {
             {/* Results Meta Info */}
             <div className="mb-4 flex items-center justify-between text-sm font-medium text-gray-700">
               <p className="md:hidden">
-                <span className="text-base font-bold text-gray-900">24</span>{' '}
-                Compatible donors found near you
+                <span className="text-base font-bold text-gray-900">
+                  {donors.length}
+                </span>
+                Compatible donors found
               </p>
               <p className="hidden text-base font-bold text-gray-900 md:block">
-                Showing 148 matches
+                Showing {donors.length} matches
               </p>
 
               <div className="hidden items-center gap-2 md:flex">
@@ -452,33 +441,69 @@ export default function SearchDonor() {
               </div>
             </div>
 
-            {/* Donor Cards Grid */}
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:gap-6">
-              {MOCK_DONORS.map((donor) => (
-                <DonorCard key={donor.id} donor={donor} />
-              ))}
-            </div>
-
-            {/* Desktop "Load More" */}
-            <div className="mt-8 hidden justify-center md:flex">
-              <button className="flex items-center gap-1 text-sm font-bold text-gray-600 transition-colors hover:text-gray-900">
-                Load more donors
+            {/* Handle Loading & Error States */}
+            {isLoading ? (
+              <div className="flex items-center justify-center py-20">
                 <svg
+                  className="h-8 w-8 animate-spin text-[#D32F2F]"
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
                 >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
                   <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19 9l-7 7-7-7"
-                  />
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
-              </button>
-            </div>
+              </div>
+            ) : error ? (
+              <div className="py-10 text-center font-bold text-red-600">
+                {error}
+              </div>
+            ) : donors.length === 0 ? (
+              <div className="py-10 text-center text-gray-500">
+                No donors found in this area.
+              </div>
+            ) : (
+              /* Donor Cards Grid */
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:gap-6">
+                {donors.map((donor) => (
+                  <DonorCard key={donor.id} donor={donor} />
+                ))}
+              </div>
+            )}
+
+            {/* Desktop "Load More" */}
+            {!isLoading && donors.length > 0 && (
+              <div className="mt-8 hidden justify-center md:flex">
+                <button className="flex items-center gap-1 text-sm font-bold text-gray-600 transition-colors hover:text-gray-900">
+                  Load more donors
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+              </div>
+            )}
 
             <MobilePromoMap />
           </div>

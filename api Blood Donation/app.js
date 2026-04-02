@@ -13,6 +13,9 @@ app.use(express.json());
 app.use(morgan("dev"));
 // }
 
+const cors = require("cors");
+app.use(cors());
+
 const testRouter = express.Router();
 
 const testSchema = mongoose.Schema({
