@@ -1,6 +1,6 @@
 import { Outlet, useNavigation } from 'react-router-dom';
-import Footer from '../features/landing/Footer';
-import Menu from '../features/landing/Menu';
+import Footer from '../features/Landing/Footer';
+import Menu from '../features/Landing/Menu';
 
 const Loader = () => (
   <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/60 backdrop-blur-sm">

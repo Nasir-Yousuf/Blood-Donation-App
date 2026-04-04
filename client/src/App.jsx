@@ -1,20 +1,20 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 // Import components
-import Home from './features/landing/Home';
-import Register from './features/registration/Register';
-import SearchDonor from './features/donor search/SearchDonor';
-import DashBoard, { dashboardLoader } from './features/dashboard/DashBoard';
+import Home from './features/Landing/Home';
+import Register from './features/Registration/Register';
+import SearchDonor from './features/DonorSearch/SearchDonor';
+import DashBoard, { dashboardLoader } from './features/Dashboard/DashBoard';
 import AppLayout from './ui/AppLayout';
 
 // 👇 1. FIXED: Removed the loader and action imports for Emergency
 import Emergency from './features/Emergency/Emergency';
 
 import DonateNow from './features/DonateNow/DonateNow';
-import Login, { loginAction } from './features/login/Login';
+import Login, { loginAction } from './features/Login/Login';
 import Impact from './features/Impact/Impact';
 import { Provider } from 'react-redux';
-import Profile, { profileAction } from './features/profile/Profile';
+import Profile, { profileAction } from './features/Profile/Profile';
 
 // Import Loaders
 import { rootAuthLoader, requireAuthLoader } from './utils/authLoaders';
