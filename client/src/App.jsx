@@ -18,7 +18,7 @@ import Profile, { profileAction } from './features/Profile/Profile.jsx';
 
 // Import Loaders
 import { rootAuthLoader, requireAuthLoader } from './utils/authLoaders.js';
-import { store } from './store.js';
+import { store } from './store/index.js';
 
 const router = createBrowserRouter([
   {
