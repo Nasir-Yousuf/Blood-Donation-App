@@ -10,14 +10,13 @@ const requestSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    location: {
-      type: String,
-      required: true,
-    },
     urgency: {
       type: String,
-      enum: ["low", "medium", "high"],
-      default: "medium",
+      enum: ["High", "Critical", "Life-Threatening"],
+      default: "High",
+    },
+    priorityValue: {
+      type: Number,
     },
     contactNumber: {
       type: String,
@@ -31,7 +30,7 @@ const requestSchema = new mongoose.Schema(
     assignedDonor: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
-      default: null, // Starts as null until someone accepts
+      default: null,
     },
     location: {
       type: {
@@ -44,6 +43,17 @@ const requestSchema = new mongoose.Schema(
         required: true,
       },
     },
+    hospitalName: {
+      type: String,
+      required: [true, "Please provide the hospital or clinic name"],
+    },
+    hospitalAddress: {
+      type: String,
+      required: [true, "Please provide the exact hospital address"],
+    },
+    caseDetails: {
+      type: String,
+    },
     createdBy: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
@@ -53,6 +63,18 @@ const requestSchema = new mongoose.Schema(
 );
 
 requestSchema.index({ location: "2dsphere" });
+
+// 🚨 FIXED HOOK: Used 'async' so Mongoose handles it automatically without needing next()
+requestSchema.pre("save", async function () {
+  const priorityMap = {
+    "Life-Threatening": 1,
+    Critical: 2,
+    High: 3,
+  };
+
+  // Assign the number based on the selected string
+  this.priorityValue = priorityMap[this.urgency] || 3;
+});
 
 const Request = mongoose.model("Request", requestSchema);
 

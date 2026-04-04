@@ -1,93 +1,139 @@
-import FootItem from './FootItem';
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-/**
- * Main Mobile NavBar Component
- * Fixed to the bottom of the screen on mobile devices.
- */
-const Footer = () => {
+// ==========================================
+// 1. REUSABLE NAV ITEM (Floating Pill Style)
+// ==========================================
+const FootItem = ({ to, icon, label }) => {
   return (
-    /* Semantic <nav> element. 
-      fixed bottom-0: Sticks to the bottom.
-      md:hidden: Hides on desktop screens.
-    */
-    <nav className="fixed bottom-0 left-0 z-50 h-16 w-full border-t border-gray-200 bg-white shadow-[0_-4px_10px_rgba(0,0,0,0.03)] md:hidden">
-      <div className="mx-auto flex h-full max-w-lg">
-        <FootItem
-          to="/"
-          label="HOME"
-          icon={
-            <svg
-              width="16"
-              height="18"
-              viewBox="0 0 16 18"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M0 18V6L8 0L16 6V18H10V11H6V18H0V18" fill="#B91C1C" />
-            </svg>
-          }
-        />
+    <NavLink
+      to={to}
+      className={({ isActive }) =>
+        `flex h-[60px] flex-col items-center justify-center rounded-2xl transition-all duration-300 ${
+          isActive
+            ? 'w-[76px] bg-red-50 text-[#D32F2F]' // Active: Light red background, brand red text
+            : 'w-[64px] bg-transparent text-slate-400 hover:text-slate-600' // Inactive: Transparent, slate text
+        }`
+      }
+    >
+      {({ isActive }) => (
+        <>
+          {/* Icon Wrapper */}
+          <div
+            className={`mb-1 transition-transform duration-300 ${
+              isActive ? 'scale-105' : 'scale-100'
+            }`}
+          >
+            {icon}
+          </div>
+          {/* Label text */}
+          <span
+            className={`text-[11px] tracking-wide transition-all duration-300 ${
+              isActive ? 'font-bold' : 'font-medium'
+            }`}
+          >
+            {label}
+          </span>
+        </>
+      )}
+    </NavLink>
+  );
+};
 
+// ==========================================
+// 2. MAIN MOBILE FOOTER COMPONENT
+// ==========================================
+const Footer = () => {
+  // Pull authentication state from Redux
+  const { isAuthenticated } = useSelector((state) => state.auth);
+
+  return (
+    // Floating Pill Container: Fixed to bottom, centered, with soft shadow
+    <div className="fixed bottom-6 left-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 md:hidden">
+      <nav className="flex h-[76px] w-full items-center justify-between rounded-[2rem] border border-gray-50 bg-white px-3 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+        {/* SLOT 1: Home (Guest) OR Dashboard (Logged In) */}
+        {!isAuthenticated ? (
+          <FootItem
+            to="/"
+            label="Home"
+            icon={
+              <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 3L3.5 10.5v10.5h17V10.5L12 3zm4 11h-3v3h-2v-3H8v-2h3V9h2v3h3v2z" />
+              </svg>
+            }
+          />
+        ) : (
+          <FootItem
+            to="/dashboard"
+            label="Dashboard"
+            icon={
+              // Using the same Home/Hospital icon for Dashboard as it serves as their "Home Base"
+              <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 3L3.5 10.5v10.5h17V10.5L12 3zm4 11h-3v3h-2v-3H8v-2h3V9h2v3h3v2z" />
+              </svg>
+            }
+          />
+        )}
+
+        {/* SLOT 2: Search (Universal) */}
         <FootItem
           to="/donor"
-          label="SEARCH"
-          icon={
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 18 18"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M16.6 18L10.3 11.7C9.8 12.1 9.225 12.4167 8.575 12.65C7.925 12.8833 7.23333 13 6.5 13C4.68333 13 3.14583 12.3708 1.8875 11.1125C0.629167 9.85417 0 8.31667 0 6.5C0 4.68333 0.629167 3.14583 1.8875 1.8875C3.14583 0.629167 4.68333 0 6.5 0C8.31667 0 9.85417 0.629167 11.1125 1.8875C12.3708 3.14583 13 4.68333 13 6.5C13 7.23333 12.8833 7.925 12.65 8.575C12.4167 9.225 12.1 9.8 11.7 10.3L18 16.6L16.6 18V18M6.5 11C7.75 11 8.8125 10.5625 9.6875 9.6875C10.5625 8.8125 11 7.75 11 6.5C11 5.25 10.5625 4.1875 9.6875 3.3125C8.8125 2.4375 7.75 2 6.5 2C5.25 2 4.1875 2.4375 3.3125 3.3125C2.4375 4.1875 2 5.25 2 6.5C2 7.75 2.4375 8.8125 3.3125 9.6875C4.1875 10.5625 5.25 11 6.5 11V11"
-                fill="#9CA3AF"
-              />
-            </svg>
-          }
-        />
-
-        <FootItem
-          to="/registration"
-          label="REGISTRATION"
+          label="Search"
           icon={
             <svg
               className="h-6 w-6"
               fill="none"
               stroke="currentColor"
+              strokeWidth="2.5"
               viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
             >
+              <circle cx="10.5" cy="10.5" r="6.5" />
+              <path strokeLinecap="round" d="M19.5 19.5l-4.5-4.5" />
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                d="M8.5 10.5l1.5 1.5 2.5-2.5"
               />
             </svg>
           }
         />
 
+        {/* SLOT 3: Emergency (Universal) */}
         <FootItem
-          to="/dashboard"
-          label="DASHBOARD"
+          to="/emergency"
+          label="Emergency"
           icon={
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 18 18"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M10 6V0H18V6H10V6M0 10V0H8V10H0V10M10 18V8H18V18H10V18M0 18V12H8V18H0V18M2 8H6V2H2V8V8M12 16H16V10H12V16V16M12 4H16V2H12V4V4M2 16H6V14H2V16V16M6 8V8V8V8V8V8M12 4V4V4V4V4V4M12 10V10V10V10V10V10M6 14V14V14V14V14V14"
-                fill="#9CA3AF"
-              />
+            <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2.5C12 2.5 5 9.5 5 15.5a7 7 0 0014 0C19 9.5 12 2.5 12 2.5zm3 14h-2v2h-2v-2H8v-2h3v-2h2v2h3v2z" />
             </svg>
           }
         />
-      </div>
-    </nav>
+
+        {/* SLOT 4: Account/Login (Guest) OR Profile (Logged In) */}
+        {!isAuthenticated ? (
+          <FootItem
+            to="/login"
+            label="Account"
+            icon={
+              <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" />
+              </svg>
+            }
+          />
+        ) : (
+          <FootItem
+            to="/profile"
+            label="Profile"
+            icon={
+              <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" />
+              </svg>
+            }
+          />
+        )}
+      </nav>
+    </div>
   );
 };
 

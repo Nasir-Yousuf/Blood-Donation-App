@@ -15,7 +15,8 @@ exports.register = async (req, res) => {
       mobileNumber: req.body.mobileNumber,
       password: req.body.password,
       bloodType: req.body.bloodType,
-      location: req.body.location, // Ensure frontend sends { type: "Point", coordinates: [lng, lat] }
+      gender: req.body.gender,
+      location: req.body.location,
     });
 
     const token = signToken(newUser._id);

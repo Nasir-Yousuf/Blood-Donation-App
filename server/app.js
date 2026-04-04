@@ -1,69 +1,22 @@
 const express = require("express");
 const morgan = require("morgan");
-const mongoose = require("mongoose");
+const cors = require("cors");
 
 const userRoutes = require("./src/routes/userRoutes");
 const requestRoutes = require("./src/routes/requestRoutes");
 
 const app = express();
 
-app.use(express.json());
-
-// if (process.env.NODE_ENV === "development") {
-app.use(morgan("dev"));
-// }
-
-const cors = require("cors");
+// Middlewares
 app.use(cors());
+app.use(express.json());
+app.use(morgan("dev"));
 
-const testRouter = express.Router();
-
-const testSchema = mongoose.Schema({
-  name: {
-    type: String,
-    require: [true, "You have to put your name in there"],
-  },
-  createdAt: {
-    type: String,
-    default: () => new Date(),
-  },
-});
-
-const Test = mongoose.model("Test", testSchema);
-
-const getAllTest = async (req, res) => {
-  const test = await Test.find();
-  res.status(200).json({
-    name: "You are the real hero",
-    test: { test },
-  });
-};
-
-const createTest = async (req, res) => {
-  const newTest = await Test.create(req.body);
-
-  res.status(201).json({
-    newTest: {
-      newTest,
-    },
-  });
-};
-const getTestById = async (req, res) => {
-  const testById = await Test.findById(req.params.id);
-
-  res.status(200).json({
-    data: {
-      testById,
-    },
-  });
-};
-
-// VERSIONING ✅
-app.use("/", testRouter);
+// Routes
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/requests", requestRoutes);
 
-// Global Error Handling Middleware
+// 🚨 FIXED: Global Error Handler (MUST have all 4 parameters: err, req, res, next)
 app.use((err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   res.status(err.statusCode).json({
@@ -73,4 +26,3 @@ app.use((err, req, res, next) => {
 });
 
 module.exports = app;
-// api Blood Donation/src/routes/userRoutes.js

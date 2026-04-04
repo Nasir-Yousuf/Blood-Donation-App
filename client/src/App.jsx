@@ -4,16 +4,21 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from './features/landing/Home';
 import Register from './features/registration/Register';
 import SearchDonor from './features/donor search/SearchDonor';
-import DashBoard from './features/dashboard/DashBoard';
+import DashBoard, { dashboardLoader } from './features/dashboard/DashBoard';
 import AppLayout from './ui/AppLayout';
+
+// 👇 1. FIXED: Removed the loader and action imports for Emergency
 import Emergency from './features/Emergency/Emergency';
+
 import DonateNow from './features/DonateNow/DonateNow';
-import Login, { loginAction } from './features/login/Login'; // Notice the action import
+import Login, { loginAction } from './features/login/Login';
 import Impact from './features/Impact/Impact';
 import { Provider } from 'react-redux';
+import Profile, { profileAction } from './features/profile/Profile';
 
 // Import Loaders
 import { rootAuthLoader, requireAuthLoader } from './utils/authLoaders';
+import { store } from './store';
 
 const router = createBrowserRouter([
   {
@@ -44,7 +49,13 @@ const router = createBrowserRouter([
       {
         path: '/dashboard',
         element: <DashBoard />,
-        loader: requireAuthLoader, // 3. The Bouncer: Kicks unauthenticated users to /login
+        loader: dashboardLoader, // 3. The Bouncer: Kicks unauthenticated users to /login
+      },
+      {
+        path: '/profile',
+        element: <Profile />,
+        action: profileAction,
+        // loader: requireAuthLoader, // (If you are using your auth guard)
       },
       {
         path: '/donor',
@@ -54,7 +65,8 @@ const router = createBrowserRouter([
       {
         path: '/emergency',
         element: <Emergency />,
-        loader: requireAuthLoader,
+        // 👇 2. FIXED: Removed the loader and action here.
+        // It now uses useEffect to load instantly without blocking the UI!
       },
       {
         path: '/donate',
@@ -64,10 +76,10 @@ const router = createBrowserRouter([
     ],
   },
 ]);
-import { store } from './store';
+
 export default function App() {
   return (
-    // 2. Wrap your RouterProvider with the Redux Provider
+    // Wrap your RouterProvider with the Redux Provider
     <Provider store={store}>
       <RouterProvider router={router} />
     </Provider>

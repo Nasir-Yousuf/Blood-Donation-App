@@ -5,6 +5,10 @@ const authMiddleware = require("../middlewares/authMiddleware"); // 1. IMPORT MI
 const router = express.Router();
 
 // Put these ABOVE router.route("/:id") or router.route("/")
+
+// 🚨 NEW PUBLIC ROUTE ADDED HERE (No authMiddleware)
+router.get("/nearby-public/", requestController.getPublicNearbyRequests);
+
 router.get(
   "/my-requests",
   authMiddleware.protect,

@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs"); // Need this for Step 2
-const { ReceiptTurkishLiraIcon } = require("lucide-react");
+const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema(
   {
@@ -13,12 +12,12 @@ const userSchema = new mongoose.Schema(
     mobileNumber: {
       type: String,
       required: [true, "User must have a mobile number"],
-    }, // NEW FIELD
+    },
     password: {
       type: String,
       required: [true, "User must have a password"],
       select: false,
-    }, // Hide by default
+    },
     role: {
       type: String,
       enum: ["donor", "requester", "admin"],
@@ -27,9 +26,8 @@ const userSchema = new mongoose.Schema(
     bloodType: { type: String, required: true },
     location: {
       type: { type: String, enum: ["Point"], default: "Point" },
-      coordinates: { type: [Number], required: true }, // Format: [longitude, latitude]
+      coordinates: { type: [Number], required: true }, // [longitude, latitude]
     },
-    // Add these fields inside your userSchema definition
     gender: {
       type: String,
       enum: ["male", "female", "other"],
@@ -40,19 +38,21 @@ const userSchema = new mongoose.Schema(
     },
     nextAvailableDate: {
       type: Date,
-      default: Date.now, // By default, they are available immediately upon signup
+      default: Date.now,
     },
     isAvailable: { type: Boolean, default: true },
   },
   { timestamps: true },
 );
 
-// 🚨 CRITICAL FOR LOCATION SEARCH: Add a 2dsphere index
+// CRITICAL FOR LOCATION SEARCH: Add a 2dsphere index
 userSchema.index({ location: "2dsphere" });
 
 // Hash password before saving to the database
 userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) ReceiptTurkishLiraIcon;
+  // If password is not modified, skip hashing and move to the next middleware
+  if (!this.isModified("password")) return;
+
   this.password = await bcrypt.hash(this.password, 12);
 });
 

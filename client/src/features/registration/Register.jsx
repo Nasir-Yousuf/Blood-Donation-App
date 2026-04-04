@@ -1,38 +1,38 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { setCredentials } from '../../store/slices/authSlice';
+import api from '../../api/axiosInstance'; // Using your custom API interceptor!
 
 // ==========================================
-// FORM COMPONENT (Pure React State)
+// FORM COMPONENT
 // ==========================================
 const RegistrationForm = () => {
   const [isLocating, setIsLocating] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch(); // Added Redux dispatch
 
-  // State perfectly mapped to the new Mongoose Schema
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    mobileNumber: '', // New field
+    mobileNumber: '',
     password: '',
-    gender: '', // New field
+    gender: '',
     locationText: '',
-    coordinates: [null, null], // [longitude, latitude] for Mongoose GeoJSON
+    coordinates: [null, null],
     bloodType: 'A-',
     isAvailable: true,
   });
 
   const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
-  // Handle standard text and select inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Auto-Location Fetcher
   const handleGetLocation = () => {
     if (!navigator.geolocation) {
       return alert('Geolocation is not supported by your browser.');
@@ -43,9 +43,7 @@ const RegistrationForm = () => {
       async (position) => {
         try {
           const { latitude, longitude } = position.coords;
-
-          // Fetch human-readable city/state
-          const res = await axios.get(
+          const res = await api.get(
             `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
           );
 
@@ -57,13 +55,12 @@ const RegistrationForm = () => {
           const state = res.data.address?.state || '';
           const formattedLocation = [city, state].filter(Boolean).join(', ');
 
-          // Update state with both the UI text and the exact coordinates for the API
           setFormData((prev) => ({
             ...prev,
             locationText:
               formattedLocation ||
               `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`,
-            coordinates: [longitude, latitude], // Note: GeoJSON requires [lng, lat]
+            coordinates: [longitude, latitude],
           }));
         } catch (error) {
           console.error('Error fetching location details:', error);
@@ -81,55 +78,48 @@ const RegistrationForm = () => {
     );
   };
 
-  // API Submission Handler
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    // Safety check for GeoJSON coordinates
     if (formData.coordinates[0] === null) {
       return alert(
         'Please click the location target icon to detect your coordinates before submitting.'
       );
     }
-
-    // Safety check for Gender
     if (!formData.gender) {
       return alert('Please select your gender for donation health guidelines.');
     }
 
     setIsSubmitting(true);
 
-    // Format the payload exactly as your new Mongoose schema expects
     const payload = {
       name: formData.name,
       email: formData.email,
-      mobileNumber: formData.mobileNumber, // Added
+      mobileNumber: formData.mobileNumber,
       password: formData.password,
-      gender: formData.gender, // Added
+      gender: formData.gender,
       bloodType: formData.bloodType,
       isAvailable: formData.isAvailable,
       location: {
         type: 'Point',
-        coordinates: formData.coordinates, // [longitude, latitude]
+        coordinates: formData.coordinates,
       },
     };
 
     try {
-      console.log('Sending payload to API:', payload);
+      // 1. Send Registration Request (Make sure this route matches your backend!)
+      const response = await api.post('/users/register', payload);
 
-      const response = await axios.post(
-        'http://127.0.0.1:3000/api/v1/users',
-        payload,
-        {
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
+      // 2. Automatically grab token and user data from the successful registration
+      const token = response.data.token;
+      const user = response.data.data.user;
 
-      console.log('API Response:', response.data);
-      alert('User successfully created!');
+      // 3. Save to localStorage & Redux
+      localStorage.setItem('jwt_token', token);
+      dispatch(setCredentials({ user, token }));
 
-      // Redirect to login page upon success
-      navigate('/login');
+      // 4. Redirect straight to Dashboard! No login needed.
+      navigate('/dashboard');
     } catch (error) {
       console.error('Registration failed:', error);
       const errorMsg =
@@ -164,7 +154,6 @@ const RegistrationForm = () => {
           <h2 className="text-lg font-bold text-gray-900">Personal Identity</h2>
         </div>
 
-        {/* Row 1: Name */}
         <div className="mb-4">
           <label className="mb-2 block text-xs font-bold text-gray-700">
             Full Legal Name
@@ -180,7 +169,6 @@ const RegistrationForm = () => {
           />
         </div>
 
-        {/* Row 2: Email & Mobile Number */}
         <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label className="mb-2 block text-xs font-bold text-gray-700">
@@ -212,7 +200,6 @@ const RegistrationForm = () => {
           </div>
         </div>
 
-        {/* Row 3: Password & Gender */}
         <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label className="mb-2 block text-xs font-bold text-gray-700">
@@ -248,7 +235,6 @@ const RegistrationForm = () => {
                 <option value="female">Female</option>
                 <option value="other">Other</option>
               </select>
-              {/* Custom Dropdown Arrow */}
               <div className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-gray-500">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -269,7 +255,6 @@ const RegistrationForm = () => {
           </div>
         </div>
 
-        {/* Row 4: Auto-Location Input */}
         <div>
           <label className="mb-2 block text-xs font-bold text-gray-700">
             Location / City
@@ -284,7 +269,6 @@ const RegistrationForm = () => {
               placeholder="Click target icon to detect location ->"
               className="w-full cursor-default rounded-2xl border-none bg-[#F4F4F5] py-4 pr-12 pl-5 text-sm text-gray-800 placeholder-gray-400 transition-all focus:ring-2 focus:ring-[#D32F2F]/20 focus:outline-none"
             />
-
             <button
               type="button"
               onClick={handleGetLocation}
@@ -355,11 +339,7 @@ const RegistrationForm = () => {
               onClick={() =>
                 setFormData((prev) => ({ ...prev, bloodType: bg }))
               }
-              className={`min-w-[50px] flex-1 rounded-2xl py-3.5 text-sm font-bold transition-all outline-none sm:min-w-[60px] ${
-                formData.bloodType === bg
-                  ? 'scale-105 transform bg-[#D32F2F] text-white shadow-lg shadow-red-500/40 focus:ring-2 focus:ring-[#D32F2F] focus:ring-offset-2'
-                  : 'bg-[#F4F4F5] text-gray-600 hover:bg-gray-200 focus:ring-2 focus:ring-gray-300'
-              }`}
+              className={`min-w-[50px] flex-1 rounded-2xl py-3.5 text-sm font-bold transition-all outline-none sm:min-w-[60px] ${formData.bloodType === bg ? 'scale-105 transform bg-[#D32F2F] text-white shadow-lg shadow-red-500/40 focus:ring-2 focus:ring-[#D32F2F] focus:ring-offset-2' : 'bg-[#F4F4F5] text-gray-600 hover:bg-gray-200 focus:ring-2 focus:ring-gray-300'}`}
             >
               {bg}
             </button>
@@ -427,9 +407,6 @@ const RegistrationForm = () => {
   );
 };
 
-// ==========================================
-// PARENT COMPONENT
-// ==========================================
 export default function RegisterPage() {
   return (
     <div className="flex min-h-screen items-start justify-center bg-[#F8F9FA] px-4 py-10 font-sans text-gray-900 md:px-8">

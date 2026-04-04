@@ -1,7 +1,7 @@
 import { redirect } from 'react-router-dom';
 import { store } from '../store/index';
 import { setCredentials, logout } from '../store/slices/authSlice';
-import api from './../api/axiousInstance';
+import api from './../api/axiosInstance';
 
 // 1. ROOT LOADER: Hydrates Redux on Initial Load
 export const rootAuthLoader = async () => {

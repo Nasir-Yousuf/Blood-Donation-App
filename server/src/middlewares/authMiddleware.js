@@ -13,11 +13,9 @@ exports.protect = async (req, res, next) => {
     }
 
     if (!token) {
-      return res
-        .status(401)
-        .json({
-          message: "You are not logged in! Please log in to get access.",
-        });
+      return res.status(401).json({
+        message: "You are not logged in! Please log in to get access.",
+      });
     }
 
     // 2. Verify the token
@@ -26,19 +24,18 @@ exports.protect = async (req, res, next) => {
     // 3. Check if the user still exists
     const currentUser = await User.findById(decoded.id);
     if (!currentUser) {
-      return res
-        .status(401)
-        .json({
-          message: "The user belonging to this token no longer exists.",
-        });
+      return res.status(401).json({
+        message: "The user belonging to this token no longer exists.",
+      });
     }
 
-    // 4. Grant Access: Put the user data onto the request object
+    // 4. Grant Access
     req.user = currentUser;
-    next();
+    next(); // Moves to the next function
   } catch (err) {
-    res
-      .status(401)
-      .json({ status: "fail", message: "Invalid token. Please log in again." });
+    res.status(401).json({
+      status: "fail",
+      message: "Invalid token. Please log in again.",
+    });
   }
 };

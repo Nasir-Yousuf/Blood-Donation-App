@@ -1,18 +1,49 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link, useLoaderData } from 'react-router-dom';
-import api from '../../api/axiousInstance';
-import { setCredentials } from '../../store/slices/authSlice';
+import { Link, useLoaderData, redirect } from 'react-router-dom';
+import api from '../../api/axiosInstance';
+import { setCredentials, logout } from '../../store/slices/authSlice';
+import { store } from '../../store/index';
 
 // ==========================================
-// 1. DASHBOARD LOADER (The API Brain)
+// 1. DASHBOARD LOADER
 // ==========================================
 export const dashboardLoader = async () => {
   try {
+    const state = store.getState();
+    let user = state.auth.user;
+    const token = localStorage.getItem('jwt_token');
+
+    if (!token) {
+      store.dispatch(logout());
+      return redirect('/login');
+    }
+
+    if (!user) {
+      try {
+        const userRes = await api.get('/users/me');
+        user = userRes.data?.data?.user || userRes.data?.user;
+        if (!user) throw new Error('User data not found in response');
+        store.dispatch(setCredentials({ user, token }));
+      } catch (err) {
+        console.error('Failed to hydrate user profile:', err);
+        store.dispatch(logout());
+        return redirect('/login');
+      }
+    }
+
+    const config = { timeout: 5000 };
+
     const [donationsRes, requestsRes, nearbyRes] = await Promise.all([
-      api.get('/requests/my-donations').catch(() => ({ data: { data: [] } })),
-      api.get('/requests/my-requests').catch(() => ({ data: { data: [] } })),
-      api.get('/requests/nearby/20').catch(() => ({ data: { data: [] } })),
+      api
+        .get('/requests/my-donations', config)
+        .catch(() => ({ data: { data: [] } })),
+      api
+        .get('/requests/my-requests', config)
+        .catch(() => ({ data: { data: [] } })),
+      api
+        .get('/requests/nearby/20', config)
+        .catch(() => ({ data: { data: [] } })),
     ]);
 
     const donations = donationsRes.data?.data || [];
@@ -39,7 +70,6 @@ export const dashboardLoader = async () => {
     );
     const donationsAway = nextTierGoal - totalDonations;
 
-    // Safely stitch together activity, ensuring dates fallback to now if missing
     const rawActivity = [
       ...donations.map((d) => ({
         id: `don-${d._id}`,
@@ -123,6 +153,22 @@ const Icons = {
       />
     </svg>
   ),
+  // Added a User Profile icon
+  Profile: () => (
+    <svg
+      className="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+      />
+    </svg>
+  ),
   Drop: () => (
     <svg
       className="h-5 w-5"
@@ -173,26 +219,6 @@ const Icons = {
       />
     </svg>
   ),
-  Settings: () => (
-    <svg
-      className="h-5 w-5"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-      />
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-      />
-    </svg>
-  ),
   Speakerphone: () => (
     <svg
       className="h-5 w-5"
@@ -213,10 +239,15 @@ const Icons = {
 // ==========================================
 // 3. HELPER COMPONENTS
 // ==========================================
-const SidebarItem = ({ icon, text, active }) => (
+// UPDATED: Dynamically styles based on active state exactly like mockups
+const SidebarItem = ({ icon, text, active, to = '#' }) => (
   <Link
-    to="#"
-    className={`flex items-center gap-3 px-6 py-3 font-medium transition-all ${active ? 'border-l-4 border-[#D32F2F] bg-red-50/50 text-[#D32F2F]' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}
+    to={to}
+    className={`mr-4 flex items-center gap-3 rounded-r-full border-l-4 px-6 py-3.5 font-bold transition-all ${
+      active
+        ? 'border-[#D32F2F] bg-red-50/50 text-[#D32F2F]'
+        : 'border-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-900'
+    }`}
   >
     {icon}
     <span className="text-sm">{text}</span>
@@ -233,7 +264,7 @@ const getBloodTypeInfo = (bloodType) => {
 const formatDate = (dateString) => {
   if (!dateString) return 'Available Now';
   const date = new Date(dateString);
-  if (isNaN(date.getTime())) return 'Available Now'; // Safety check for invalid strings
+  if (isNaN(date.getTime())) return 'Available Now';
   return date.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -269,7 +300,6 @@ export default function DashBoard() {
     }
   };
 
-  // Wait for Redux to hydrate or loader data to return
   if (!user || !dashboardData) {
     return (
       <div className="flex min-h-[calc(100vh-80px)] items-center justify-center bg-[#F8F9FA]">
@@ -283,20 +313,38 @@ export default function DashBoard() {
 
   return (
     <div className="flex min-h-[calc(100vh-80px)] bg-[#F8F9FA] font-sans text-gray-900">
-      {/* LEFT SIDEBAR (Desktop Only) */}
+      {/* LEFT SIDEBAR (Desktop Only - STREAMLINED AREA) */}
       <aside className="sticky top-0 z-20 hidden h-screen w-[260px] shrink-0 flex-col border-r border-gray-100 bg-white py-8 lg:flex">
-        <nav className="flex flex-1 flex-col gap-1">
-          <SidebarItem icon={<Icons.Dashboard />} text="Dashboard" active />
-          <SidebarItem icon={<Icons.Drop />} text="Donations" />
-          <SidebarItem icon={<Icons.Location />} text="Centers" />
-          <SidebarItem icon={<Icons.Heart />} text="Impact" />
-          <Link
-            to="/settings"
-            className="flex items-center gap-3 px-6 py-3 font-medium text-gray-500 transition-all hover:bg-gray-50 hover:text-gray-900"
-          >
-            <Icons.Settings /> <span className="text-sm">Settings</span>
-          </Link>
+        <nav className="mt-4 flex flex-1 flex-col gap-2">
+          {/* OLD LINKS REMOVED. JUST DASHBOARD & PROFILE NOW. */}
+          <SidebarItem
+            icon={<Icons.Dashboard />}
+            text="Dashboard"
+            active
+            to="/dashboard"
+          />
+          <SidebarItem icon={<Icons.Profile />} text="Profile" to="/profile" />
         </nav>
+
+        {/* Support Button pinned to bottom */}
+        <div className="mt-auto px-6 pb-4">
+          <button className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-bold text-gray-700 shadow-sm transition-colors hover:bg-gray-50">
+            <svg
+              className="h-4 w-4 text-gray-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            Support
+          </button>
+        </div>
       </aside>
 
       {/* MAIN CONTENT AREA */}
@@ -332,7 +380,7 @@ export default function DashBoard() {
                     <Icons.Drop />
                   </div>
                   <div className="flex flex-col items-end gap-2">
-                    <span className="text-[10px] font-bold tracking-widest uppercase opacity-80 lg:hidden">
+                    <span className="text-[10px] font-bold tracking-widest text-white uppercase opacity-80 lg:hidden">
                       Status
                     </span>
                     <button
@@ -347,7 +395,7 @@ export default function DashBoard() {
                   </div>
                 </div>
                 <div className="relative z-10 mt-4">
-                  <p className="mb-1 hidden text-[10px] font-bold tracking-widest uppercase opacity-80 lg:block">
+                  <p className="mb-1 hidden text-[10px] font-bold tracking-widest text-white uppercase opacity-80 lg:block">
                     Donor Status
                   </p>
                   <h3 className="text-2xl font-bold lg:text-xl">
@@ -361,7 +409,6 @@ export default function DashBoard() {
 
               {/* 2 & 3. Secondary Stats */}
               <div className="flex flex-1 flex-col gap-4 sm:flex-row">
-                {/* Total Donations */}
                 <div className="flex min-h-[160px] flex-1 flex-col justify-between rounded-[24px] border border-gray-100 bg-white p-6 shadow-sm">
                   <div className="flex items-start justify-between">
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
@@ -378,7 +425,6 @@ export default function DashBoard() {
                   </div>
                 </div>
 
-                {/* Requests Made */}
                 <div className="flex min-h-[160px] flex-1 flex-col justify-between rounded-[24px] border border-gray-100 bg-white p-6 shadow-sm">
                   <div className="flex items-start justify-between">
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
@@ -477,7 +523,7 @@ export default function DashBoard() {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="hidden text-[10px] font-bold tracking-widest text-gray-400 uppercase lg:block">
+                    <p className="hidden text-[10px] font-bold tracking-widest text-white uppercase lg:block">
                       Level: {milestone?.level || 'Bronze'}
                     </p>
                     <p className="mt-1 text-sm font-bold text-[#006064] lg:text-xs lg:text-gray-900">
@@ -537,7 +583,7 @@ const VitalProfileCard = ({ user }) => (
             Vital Profile
           </p>
           <div className="flex items-center gap-3 lg:block">
-            <h3 className="rounded-full bg-[#D32F2F] px-4 py-1.5 text-3xl font-extrabold text-gray-900 text-white lg:bg-transparent lg:px-0 lg:py-0 lg:text-2xl lg:text-gray-900">
+            <h3 className="rounded-full bg-[#D32F2F] px-4 py-1.5 text-3xl font-extrabold text-white lg:bg-transparent lg:px-0 lg:py-0 lg:text-2xl lg:text-gray-900">
               Type {user?.bloodType || 'N/A'}
             </h3>
             <p className="mt-0 rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-[#006064] lg:mt-1 lg:bg-transparent lg:px-0 lg:py-0 lg:text-[#006064]">
@@ -570,7 +616,6 @@ const VitalProfileCard = ({ user }) => (
         </div>
       </div>
 
-      {/* Mobile Bottom Image Decoration */}
       <div className="relative mt-4 h-24 overflow-hidden rounded-xl bg-gray-100 lg:hidden">
         <img
           src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"

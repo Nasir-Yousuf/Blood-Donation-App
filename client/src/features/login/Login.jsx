@@ -6,14 +6,13 @@ import {
   useNavigation,
   redirect,
 } from 'react-router-dom';
-import api from '../../api/axiousInstance';
+import api from '../../api/axiosInstance'; // FIXED TYPO: axious -> axios
 import { store } from '../../store/index';
 import { setCredentials } from '../../store/slices/authSlice';
 
 // ==========================================
 // 1. THE LOGIN ACTION (React Router uses this!)
 // ==========================================
-// Make sure this 'export' is here!
 export const loginAction = async ({ request }) => {
   const formData = await request.formData();
   const credentials = Object.fromEntries(formData);
@@ -21,19 +20,15 @@ export const loginAction = async ({ request }) => {
   try {
     const response = await api.post('/users/login', credentials);
 
-    // Extract token and user from your API response
     const token = response.data.token;
     const user = response.data.data.user;
 
-    // Save to localStorage & Redux
     localStorage.setItem('jwt_token', token);
     store.dispatch(setCredentials({ user, token }));
 
-    // Redirect to Dashboard on success
     return redirect('/dashboard');
   } catch (error) {
     console.error('Login failed:', error);
-    // Return error to the UI
     return (
       error.response?.data?.message ||
       'Invalid email or password. Please try again.'
@@ -72,18 +67,15 @@ const DesktopHero = () => (
 // ==========================================
 // 3. MAIN LOGIN COMPONENT
 // ==========================================
-// Make sure this is 'export default'
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
-  // React Router Hooks
-  const errorMessage = useActionData(); // Grabs errors returned from loginAction
+  const errorMessage = useActionData();
   const navigation = useNavigation();
   const isSubmitting = navigation.state === 'submitting';
 
   return (
     <div className="flex min-h-screen flex-col bg-[#F8F9FA] font-sans lg:items-center lg:justify-center">
-      {/* Mobile Top Header */}
       <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-6 py-5 shadow-sm lg:hidden">
         <Link
           to="/"
@@ -111,10 +103,8 @@ export default function Login() {
       </div>
 
       <div className="mx-auto flex w-full max-w-[1000px] flex-1 flex-col overflow-hidden bg-[#F8F9FA] lg:my-10 lg:flex-row lg:rounded-[40px] lg:bg-white lg:shadow-2xl">
-        {/* Desktop Left Side */}
         <DesktopHero />
 
-        {/* Right Side: Form Content */}
         <div className="flex flex-1 flex-col p-6 lg:justify-center lg:p-14">
           <div className="mt-4 mb-8 flex flex-col items-center text-center lg:hidden">
             <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-red-100 bg-red-50 shadow-sm">
@@ -145,16 +135,13 @@ export default function Login() {
               </p>
             </div>
 
-            {/* Display Backend Errors Here */}
             {errorMessage && (
               <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-3 text-center text-sm font-medium text-red-600">
                 {errorMessage}
               </div>
             )}
 
-            {/* REACT ROUTER FORM: Automatically sends data to loginAction */}
             <Form method="post">
-              {/* Email Input */}
               <div className="mb-5">
                 <label className="mb-2 block text-[11px] font-bold tracking-widest text-gray-500 uppercase">
                   Email Address
@@ -180,7 +167,6 @@ export default function Login() {
                 </div>
               </div>
 
-              {/* Password Input */}
               <div className="mb-6">
                 <div className="mb-2 flex items-center justify-between">
                   <label className="block text-[11px] font-bold tracking-widest text-gray-500 uppercase">
@@ -215,7 +201,6 @@ export default function Login() {
                       />
                     </svg>
                   </div>
-                  {/* Visual Toggle for Password */}
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
@@ -238,7 +223,6 @@ export default function Login() {
                 </div>
               </div>
 
-              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={isSubmitting}
@@ -274,7 +258,6 @@ export default function Login() {
               </button>
             </Form>
 
-            {/* Divider */}
             <div className="relative mb-6 flex items-center justify-center">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-200"></div>
@@ -284,7 +267,6 @@ export default function Login() {
               </div>
             </div>
 
-            {/* Social Logins (Future-proofed UI) */}
             <div className="mb-8 flex flex-col gap-3 lg:flex-row">
               <button
                 type="button"
@@ -328,7 +310,6 @@ export default function Login() {
               </button>
             </div>
 
-            {/* Sign Up Link */}
             <div className="border-t border-gray-100 pt-6 text-center">
               <p className="text-sm font-medium text-gray-600">
                 First time donating?{' '}
