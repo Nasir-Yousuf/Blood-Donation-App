@@ -1,8 +1,15 @@
 import axios from 'axios';
 
 // Create a custom Axios instance with your backend base URL
+// const api = axios.create({
+//   baseURL: 'http://127.0.0.1:3000/api/v1',
+//   headers: {
+//     'Content-Type': 'application/json',
+//   },
+// });
+
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:3000/api/v1',
+  baseURL: 'https://blood-donation-app-c6ft.onrender.com/api/v1',
   headers: {
     'Content-Type': 'application/json',
   },
