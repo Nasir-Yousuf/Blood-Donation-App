@@ -22,7 +22,7 @@ router.patch("/updateMe", authMiddleware.protect, userController.updateMe);
 // --- GEOSPATIAL ROUTE ---
 router.get(
   "/donors-within/:distance/center/:latlng",
-  authMiddleware.protect,
+  // authMiddleware.protect, // (Optional: Only logged in users can search donors)
   userController.getClosestDonors,
 );
 

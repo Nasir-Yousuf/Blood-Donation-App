@@ -58,6 +58,7 @@ const router = createBrowserRouter([
         // loader: requireAuthLoader, // (If you are using your auth guard)
       },
       {
+        // Fine Donor
         path: '/donor',
         element: <SearchDonor />,
         loader: requireAuthLoader, // Example: Only logged in users can search donors
