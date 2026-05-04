@@ -1,43 +1,14 @@
+'use client';
+
 import React, { useState } from 'react';
-import {
-  Form,
-  Link,
-  useActionData,
-  useNavigation,
-  redirect,
-} from 'react-router-dom';
-import api from '../../api/axiosInstance'; // FIXED TYPO: axious -> axios
-import { store } from '../../store/index';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import api from '../../api/axiosInstance';
 import { setCredentials } from '../../store/slices/authSlice';
 
 // ==========================================
-// 1. THE LOGIN ACTION (React Router uses this!)
-// ==========================================
-export const loginAction = async ({ request }) => {
-  const formData = await request.formData();
-  const credentials = Object.fromEntries(formData);
-
-  try {
-    const response = await api.post('/users/login', credentials);
-
-    const token = response.data.token;
-    const user = response.data.data.user;
-
-    localStorage.setItem('jwt_token', token);
-    store.dispatch(setCredentials({ user, token }));
-
-    return redirect('/dashboard');
-  } catch (error) {
-    console.error('Login failed:', error);
-    return (
-      error.response?.data?.message ||
-      'Invalid email or password. Please try again.'
-    );
-  }
-};
-
-// ==========================================
-// 2. DESKTOP HERO COMPONENT
+// 1. DESKTOP HERO COMPONENT
 // ==========================================
 const DesktopHero = () => (
   <div className="relative hidden w-1/2 flex-col justify-end overflow-hidden bg-gray-900 p-12 lg:flex">
@@ -65,20 +36,50 @@ const DesktopHero = () => (
 );
 
 // ==========================================
-// 3. MAIN LOGIN COMPONENT
+// 2. MAIN LOGIN COMPONENT
 // ==========================================
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const router = useRouter();
+  const dispatch = useDispatch();
 
-  const errorMessage = useActionData();
-  const navigation = useNavigation();
-  const isSubmitting = navigation.state === 'submitting';
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setErrorMessage(null);
+
+    const formData = new FormData(e.target);
+    const credentials = Object.fromEntries(formData);
+
+    try {
+      const response = await api.post('/users/login', credentials);
+
+      const token = response.data.token;
+      const user = response.data.data.user;
+
+      localStorage.setItem('jwt_token', token);
+      dispatch(setCredentials({ user, token }));
+
+      router.push('/dashboard');
+    } catch (error) {
+      console.error('Login failed:', error);
+      setErrorMessage(
+        error.response?.data?.message ||
+        'Invalid email or password. Please try again.'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="flex min-h-screen flex-col bg-[#F8F9FA] font-sans lg:items-center lg:justify-center">
       <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-6 py-5 shadow-sm lg:hidden">
         <Link
-          to="/"
+          href="/"
           className="text-gray-600 transition-colors hover:text-gray-900"
         >
           <svg
@@ -141,7 +142,7 @@ export default function Login() {
               </div>
             )}
 
-            <Form method="post">
+            <form onSubmit={handleLogin}>
               <div className="mb-5">
                 <label className="mb-2 block text-[11px] font-bold tracking-widest text-gray-500 uppercase">
                   Email Address
@@ -173,7 +174,7 @@ export default function Login() {
                     Password
                   </label>
                   <Link
-                    to="/forgot-password"
+                    href="/forgot-password"
                     className="text-[11px] font-bold text-[#006064] transition-colors hover:text-teal-800"
                   >
                     Forgot Password?
@@ -256,7 +257,7 @@ export default function Login() {
                   </>
                 )}
               </button>
-            </Form>
+            </form>
 
             <div className="relative mb-6 flex items-center justify-center">
               <div className="absolute inset-0 flex items-center">
@@ -314,7 +315,7 @@ export default function Login() {
               <p className="text-sm font-medium text-gray-600">
                 First time donating?{' '}
                 <Link
-                  to="/registration"
+                  href="/registration"
                   className="rounded-sm px-1 font-bold text-[#D32F2F] transition-colors outline-none hover:text-[#B71C1C] hover:underline focus:ring-2 focus:ring-[#D32F2F]"
                 >
                   Create an account

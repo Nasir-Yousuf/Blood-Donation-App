@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useEffect } from 'react';
 // 👇 FIXED: Using your production Axios instance
 import api from '../../api/axiosInstance';

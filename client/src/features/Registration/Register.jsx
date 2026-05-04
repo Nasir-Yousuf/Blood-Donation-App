@@ -1,5 +1,8 @@
+'use client';
+
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '../../store/slices/authSlice';
 import api from '../../api/axiosInstance'; // Using your custom API interceptor!
@@ -11,7 +14,7 @@ const RegistrationForm = () => {
   const [isLocating, setIsLocating] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const navigate = useNavigate();
+  const router = useRouter();
   const dispatch = useDispatch(); // Added Redux dispatch
 
   const [formData, setFormData] = useState({
@@ -119,7 +122,7 @@ const RegistrationForm = () => {
       dispatch(setCredentials({ user, token }));
 
       // 4. Redirect straight to Dashboard! No login needed.
-      navigate('/dashboard');
+      router.push('/dashboard');
     } catch (error) {
       console.error('Registration failed:', error);
       const errorMsg =
@@ -374,7 +377,7 @@ const RegistrationForm = () => {
 
       {/* --- Action Buttons --- */}
       <div className="mt-10 flex flex-col-reverse items-center justify-between gap-4 border-t border-gray-100 pt-6 sm:flex-row">
-        <Link to="/">
+        <Link href="/">
           <button
             type="button"
             className="text-sm font-bold text-gray-500 underline decoration-gray-300 underline-offset-4 transition-colors outline-none hover:text-gray-900 focus:text-gray-900"
@@ -396,7 +399,7 @@ const RegistrationForm = () => {
         <p className="text-sm font-medium text-gray-600">
           Already have an account?{' '}
           <Link
-            to="/login"
+            href="/login"
             className="rounded-sm px-1 font-bold text-[#D32F2F] transition-colors outline-none hover:text-[#B71C1C] hover:underline focus:ring-2 focus:ring-[#D32F2F]"
           >
             Log in here

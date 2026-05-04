@@ -1,42 +1,22 @@
+'use client';
+
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Form, useActionData, useNavigation, Link } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import api from '../../api/axiosInstance';
 import { setCredentials } from '../../store/slices/authSlice';
-import { store } from '../../store/index';
-
-// ==========================================
-// 1. THE UPDATE ACTION
-// ==========================================
-export const profileAction = async ({ request }) => {
-  const formData = await request.formData();
-  const updates = Object.fromEntries(formData);
-
-  try {
-    const response = await api.patch('/users/updateMe', updates);
-    const updatedUser = response.data.data.user;
-
-    // Update Redux state globally
-    const token = store.getState().auth.token;
-    store.dispatch(setCredentials({ user: updatedUser, token }));
-
-    return { success: true, message: 'Profile updated successfully!' };
-  } catch (error) {
-    return {
-      error: true,
-      message: error.response?.data?.message || 'Failed to update profile.',
-    };
-  }
-};
 
 // ==========================================
 // 2. MAIN PROFILE COMPONENT
 // ==========================================
 export default function Profile() {
-  const { user } = useSelector((state) => state.auth);
-  const actionData = useActionData();
-  const navigation = useNavigation();
-  const isSubmitting = navigation.state === 'submitting';
+  const { user, token } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const [actionData, setActionData] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Local state for the gender toggle UI
   const [selectedGender, setSelectedGender] = useState(user?.gender || '');
@@ -53,13 +33,39 @@ export default function Profile() {
 
   if (!user) return null;
 
+  const handleUpdateProfile = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setActionData(null);
+
+    const formData = new FormData(e.target);
+    const updates = Object.fromEntries(formData);
+
+    try {
+      const response = await api.patch('/users/updateMe', updates);
+      const updatedUser = response.data.data.user;
+
+      // Update Redux state globally
+      dispatch(setCredentials({ user: updatedUser, token }));
+
+      setActionData({ success: true, message: 'Profile updated successfully!' });
+    } catch (error) {
+      setActionData({
+        error: true,
+        message: error.response?.data?.message || 'Failed to update profile.',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="flex min-h-[calc(100vh-80px)] bg-[#F8F9FA] font-sans text-gray-900">
       {/* LEFT SIDEBAR (Desktop) */}
       <aside className="sticky top-0 z-20 hidden h-screen w-[240px] shrink-0 flex-col border-r border-gray-100 bg-white py-8 lg:flex">
         <nav className="mt-4 flex flex-1 flex-col gap-2">
           <Link
-            to="/dashboard"
+            href="/dashboard"
             className="mr-4 flex items-center gap-3 rounded-r-full border-l-4 border-transparent px-6 py-3.5 font-bold text-gray-500 transition-all hover:bg-gray-50 hover:text-gray-900"
           >
             <svg
@@ -78,7 +84,7 @@ export default function Profile() {
             <span className="text-sm">Dashboard</span>
           </Link>
           <Link
-            to="/profile"
+            href="/profile"
             className="mr-4 flex items-center gap-3 rounded-r-full border-l-4 border-[#D32F2F] bg-red-50/50 px-6 py-3.5 font-bold text-[#D32F2F] transition-all"
           >
             <svg
@@ -141,8 +147,8 @@ export default function Profile() {
         <div className="flex flex-col-reverse gap-6 lg:flex-row lg:gap-10">
           {/* LEFT COLUMN: The Form */}
           <div className="flex flex-[2] flex-col gap-6">
-            <Form
-              method="post"
+            <form
+              onSubmit={handleUpdateProfile}
               className="flex h-full flex-col rounded-[32px] border border-gray-100 bg-white p-6 shadow-sm lg:p-8"
             >
               <div className="mb-6 flex items-center justify-between">
@@ -215,8 +221,7 @@ export default function Profile() {
 
               {/* Action Buttons */}
               <div className="mt-auto flex flex-col justify-end gap-3 border-t border-gray-50 pt-6 lg:flex-row">
-                <Link to="/">
-                  {' '}
+                <Link href="/">
                   <button
                     type="button"
                     className="px-6 py-4 text-sm font-bold text-gray-500 transition-colors hover:text-gray-900"
@@ -232,7 +237,7 @@ export default function Profile() {
                   {isSubmitting ? 'Saving...' : 'Save All Changes'}
                 </button>
               </div>
-            </Form>
+            </form>
           </div>
 
           {/* RIGHT COLUMN: Static Info Cards */}

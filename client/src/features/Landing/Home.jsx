@@ -1,235 +1,17 @@
+'use client';
 import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
-// --- UTILITY: SCROLL REVEAL COMPONENT ---
-const FadeInSection = ({ children, className = '', delay = 0 }) => {
-  const [isVisible, setVisible] = useState(false);
-  const domRef = useRef();
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setVisible(true);
-            observer.unobserve(domRef.current);
-          }
-        });
-      },
-      { rootMargin: '0px 0px -50px 0px', threshold: 0.1 }
-    );
-
-    if (domRef.current) observer.observe(domRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <div
-      ref={domRef}
-      className={`transition-all duration-1000 ease-out ${
-        isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
-      } ${className}`}
-      style={{ transitionDelay: `${delay}ms` }}
-    >
-      {children}
-    </div>
-  );
-};
-
-// --- SYSTEM: LIVING BACKGROUND & PARTICLES ---
-const LivingBackground = () => {
-  return (
-    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-[#fafafa]">
-      {/* Liquid Flow Blobs */}
-      <div className="animate-blob absolute top-[-10%] left-[-10%] h-[50vw] w-[50vw] rounded-full bg-rose-100/40 mix-blend-multiply blur-[100px]"></div>
-      <div className="animate-blob animation-delay-2000 absolute top-[20%] right-[-10%] h-[40vw] w-[40vw] rounded-full bg-red-100/30 mix-blend-multiply blur-[120px]"></div>
-      <div className="animate-blob animation-delay-4000 absolute bottom-[-20%] left-[20%] h-[60vw] w-[60vw] rounded-full bg-pink-100/30 mix-blend-multiply blur-[150px]"></div>
-
-      {/* Floating Life Particles */}
-      {[...Array(30)].map((_, i) => (
-        <div
-          key={i}
-          className="animate-particle-drift absolute rounded-full bg-gradient-to-t from-red-400 to-rose-200 opacity-0 blur-[1px]"
-          style={{
-            left: `${Math.random() * 100}%`,
-            bottom: `-5%`,
-            width: `${Math.random() * 5 + 2}px`,
-            height: `${Math.random() * 5 + 2}px`,
-            animationDuration: `${Math.random() * 15 + 10}s`,
-            animationDelay: `${Math.random() * 10}s`,
-          }}
-        />
-      ))}
-
-      {/* Global Glowing Lifeline (Vertical) */}
-      <svg
-        className="absolute top-0 left-[5%] h-full w-2 opacity-20"
-        preserveAspectRatio="none"
-      >
-        <path
-          d="M 4 0 Q 8 200 4 400 T 4 800 T 4 1200 T 4 1600 T 4 2000 T 4 2400"
-          stroke="url(#lifeline-grad)"
-          strokeWidth="2"
-          fill="none"
-          className="animate-lifeline-flow"
-          strokeDasharray="100 100"
-        />
-        <defs>
-          <linearGradient id="lifeline-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#c81e1e" stopOpacity="0" />
-            <stop offset="50%" stopColor="#c81e1e" stopOpacity="1" />
-            <stop offset="100%" stopColor="#c81e1e" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-      </svg>
-      <svg
-        className="absolute top-0 right-[5%] h-full w-2 opacity-20"
-        preserveAspectRatio="none"
-      >
-        <path
-          d="M 4 0 Q 0 200 4 400 T 4 800 T 4 1200 T 4 1600 T 4 2000 T 4 2400"
-          stroke="url(#lifeline-grad)"
-          strokeWidth="2"
-          fill="none"
-          className="animate-lifeline-flow-reverse"
-          strokeDasharray="150 150"
-        />
-      </svg>
-    </div>
-  );
-};
-
-// --- INTERACTIVE STORY CARD ---
-const StoryCard = ({
-  quote,
-  name,
-  role,
-  isMetric,
-  metricValue,
-  metricLabel,
-}) => {
-  const [style, setStyle] = useState({});
-  const cardRef = useRef(null);
-
-  const handleMouseMove = (e) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-
-    const rotateX = ((y - centerY) / centerY) * -10;
-    const rotateY = ((x - centerX) / centerX) * 10;
-
-    setStyle({
-      transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`,
-      boxShadow: `${-rotateY}px ${rotateX}px 40px rgba(200,30,30,0.15)`,
-      transition: 'transform 0.1s ease-out, box-shadow 0.1s ease-out',
-    });
-  };
-
-  const handleMouseLeave = () => {
-    setStyle({
-      transform: `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`,
-      boxShadow: `0 10px 30px rgba(0,0,0,0.05)`,
-      transition:
-        'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.6s ease-out',
-    });
-  };
-
-  if (isMetric) {
-    return (
-      <div
-        ref={cardRef}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        style={style}
-        className="group relative flex h-full cursor-crosshair flex-col justify-center overflow-hidden rounded-[2rem] border border-red-500/30 bg-gradient-to-br from-[#c81e1e] via-[#a81919] to-[#800f0f] p-10 text-white"
-      >
-        <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/20 blur-3xl transition-colors duration-500 group-hover:bg-white/30"></div>
-        <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-black/20 blur-3xl"></div>
-
-        {/* Animated ECG inside Metric Card */}
-        <svg
-          className="pointer-events-none absolute inset-0 h-full w-full opacity-20"
-          preserveAspectRatio="none"
-        >
-          <path
-            d="M 0 150 L 100 150 L 120 100 L 150 250 L 180 120 L 200 150 L 400 150"
-            stroke="white"
-            strokeWidth="4"
-            fill="none"
-            className="animate-ecg"
-          />
-        </svg>
-
-        <svg
-          width="32"
-          height="32"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          className="animate-realistic-heartbeat relative z-10 mb-6 text-red-200"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M13 10V3L4 14h7v7l9-11h-7z"
-          ></path>
-        </svg>
-        <h3 className="relative z-10 mb-4 text-6xl font-black tracking-tighter drop-shadow-2xl lg:text-7xl">
-          {metricValue}
-        </h3>
-        <p className="relative z-10 text-lg leading-relaxed font-medium text-red-100">
-          {metricLabel}
-        </p>
-      </div>
-    );
-  }
-
-  return (
-    <div
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={style}
-      className="group relative flex h-full cursor-crosshair flex-col justify-between overflow-hidden rounded-[2rem] border border-white bg-white/60 p-10 shadow-xl backdrop-blur-2xl"
-    >
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-red-50/50 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
-      <div className="relative z-10">
-        <div className="mb-6 flex text-xl tracking-widest text-[#166534] drop-shadow-sm">
-          ★★★★★
-        </div>
-        <p className="mb-8 text-lg leading-relaxed font-medium text-gray-800 italic">
-          "{quote}"
-        </p>
-      </div>
-      <div className="relative z-10 flex items-center gap-4">
-        <div className="relative">
-          <div className="absolute inset-0 rounded-full bg-red-400 opacity-0 blur-md transition-opacity duration-300 group-hover:opacity-40"></div>
-          <img
-            src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`}
-            alt={name}
-            className="relative h-14 w-14 rounded-full bg-white shadow-md ring-4 ring-gray-50"
-          />
-        </div>
-        <div>
-          <h5 className="text-lg font-bold text-gray-900 transition-colors group-hover:text-[#c81e1e]">
-            {name}
-          </h5>
-          <p className="text-xs font-bold tracking-wider text-[#c81e1e] uppercase">
-            {role}
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-};
+import FadeInSection from './utils/FadeInSection';
+import LivingBackground from './components/LivingBackground';
+import StoryCard from './components/StoryCard';
 
 // --- MAIN HOME COMPONENT ---
 const Home = () => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[#fafafa] font-sans text-gray-900 selection:bg-red-200 selection:text-red-900">
       <style>{`
@@ -332,7 +114,7 @@ const Home = () => {
               <div className="absolute top-1/2 left-0 -z-10 h-px w-full bg-gradient-to-r from-red-200 via-red-400 to-transparent opacity-50 blur-[2px]"></div>
 
               <Link
-                to="/registration"
+                href="/registration"
                 className="group relative overflow-hidden rounded-xl border border-red-500/50 bg-gradient-to-b from-[#dc2626] to-[#b91c1c] px-8 py-4 text-center font-bold text-white shadow-[0_8px_20px_rgb(220,38,38,0.3)] transition-all hover:-translate-y-1 hover:shadow-[0_15px_30px_rgb(220,38,38,0.5)]"
               >
                 <div className="absolute inset-0 translate-y-full bg-white/20 transition-transform duration-300 ease-out group-hover:translate-y-0"></div>
@@ -357,7 +139,7 @@ const Home = () => {
                 </span>
               </Link>
               <Link
-                to="/donor"
+                href="/donor"
                 className="rounded-xl border border-red-100 bg-white/80 px-8 py-4 text-center font-bold text-[#c81e1e] backdrop-blur-md transition-all hover:-translate-y-1 hover:border-red-300 hover:bg-white hover:shadow-lg hover:shadow-red-100/50"
               >
                 Find Blood
@@ -913,7 +695,7 @@ const Home = () => {
             </div>
 
             {/* Upward Floating Light Cells */}
-            {[...Array(15)].map((_, i) => (
+            {mounted && [...Array(15)].map((_, i) => (
               <div
                 key={i}
                 className="pointer-events-none absolute h-2 w-2 rounded-full bg-white/60 blur-[2px]"
@@ -944,7 +726,7 @@ const Home = () => {
 
               <div className="relative z-30 flex w-full flex-wrap justify-center gap-6">
                 <Link
-                  to="/donate"
+                  href="/donate"
                   className="flex items-center gap-3 rounded-2xl bg-white px-12 py-5 text-center text-xl font-extrabold text-[#c81e1e] shadow-[0_10px_30px_rgba(0,0,0,0.3)] ring-4 ring-white/20 transition-all duration-300 hover:scale-105 hover:bg-red-50 hover:shadow-[0_20px_50px_rgba(255,255,255,0.4)]"
                 >
                   Pulse Life Now
@@ -974,7 +756,7 @@ const Home = () => {
         </div>
 
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <Link to="/" className="group mb-8 inline-flex items-center gap-2">
+          <Link href="/" className="group mb-8 inline-flex items-center gap-2">
             <div className="rounded-xl bg-red-50 p-2 text-[#c81e1e] shadow-sm transition-all duration-300 group-hover:bg-[#c81e1e] group-hover:text-white">
               <svg
                 width="28"

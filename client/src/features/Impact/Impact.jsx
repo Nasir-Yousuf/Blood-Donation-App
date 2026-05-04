@@ -1,5 +1,6 @@
+'use client';
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 // ==========================================
 // 1. MOCK DATA
@@ -135,7 +136,7 @@ const HeroSection = () => (
         </p>
 
         <div className="flex w-full flex-col gap-4 sm:w-auto sm:flex-row">
-          <Link to="/registration" className="w-full sm:w-auto">
+          <Link href="/registration" className="w-full sm:w-auto">
             <button className="w-full transform rounded-2xl bg-rose-600 px-8 py-4 text-sm font-bold text-white shadow-lg shadow-rose-600/20 transition-all duration-300 hover:-translate-y-1 hover:bg-rose-700 hover:shadow-xl hover:shadow-rose-600/30 active:scale-95">
               Start Your Journey
             </button>
@@ -540,13 +541,13 @@ const BottomCTASection = () => (
 
         <div className="mx-auto flex max-w-md flex-col justify-center gap-4 sm:max-w-none sm:flex-row">
           <Link
-            to="/registration"
+            href="/registration"
             className="flex w-full transform items-center justify-center rounded-2xl bg-gradient-to-r from-rose-600 to-rose-500 px-10 py-5 text-base font-bold text-white shadow-[0_0_40px_rgba(225,29,72,0.4)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_60px_rgba(225,29,72,0.6)] active:scale-95 sm:w-auto"
           >
             Start Your Life-Saving Journey
           </Link>
           <Link
-            to="/donor"
+            href="/donor"
             className="flex w-full transform items-center justify-center rounded-2xl border border-white/20 bg-white/5 px-10 py-5 text-base font-bold text-white backdrop-blur-md transition-all duration-300 hover:scale-105 hover:bg-white/10 active:scale-95 sm:w-auto"
           >
             Find a Local Clinic

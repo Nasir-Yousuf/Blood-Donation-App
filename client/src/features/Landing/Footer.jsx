@@ -1,43 +1,42 @@
+'use client';
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useSelector } from 'react-redux';
 
 // ==========================================
 // 1. REUSABLE NAV ITEM (Floating Pill Style)
 // ==========================================
 const FootItem = ({ to, icon, label }) => {
+  const pathname = usePathname();
+  const isActive = pathname === to;
+
   return (
-    <NavLink
-      to={to}
-      className={({ isActive }) =>
-        `flex h-[60px] flex-col items-center justify-center rounded-2xl transition-all duration-300 ${
-          isActive
-            ? 'w-[76px] bg-red-50 text-[#D32F2F]' // Active: Light red background, brand red text
-            : 'w-[64px] bg-transparent text-slate-400 hover:text-slate-600' // Inactive: Transparent, slate text
-        }`
-      }
+    <Link
+      href={to}
+      className={`flex h-[60px] flex-col items-center justify-center rounded-2xl transition-all duration-300 ${
+        isActive
+          ? 'w-[76px] bg-red-50 text-[#D32F2F]' // Active: Light red background, brand red text
+          : 'w-[64px] bg-transparent text-slate-400 hover:text-slate-600' // Inactive: Transparent, slate text
+      }`}
     >
-      {({ isActive }) => (
-        <>
-          {/* Icon Wrapper */}
-          <div
-            className={`mb-1 transition-transform duration-300 ${
-              isActive ? 'scale-105' : 'scale-100'
-            }`}
-          >
-            {icon}
-          </div>
-          {/* Label text */}
-          <span
-            className={`text-[11px] tracking-wide transition-all duration-300 ${
-              isActive ? 'font-bold' : 'font-medium'
-            }`}
-          >
-            {label}
-          </span>
-        </>
-      )}
-    </NavLink>
+      {/* Icon Wrapper */}
+      <div
+        className={`mb-1 transition-transform duration-300 ${
+          isActive ? 'scale-105' : 'scale-100'
+        }`}
+      >
+        {icon}
+      </div>
+      {/* Label text */}
+      <span
+        className={`text-[11px] tracking-wide transition-all duration-300 ${
+          isActive ? 'font-bold' : 'font-medium'
+        }`}
+      >
+        {label}
+      </span>
+    </Link>
   );
 };
 

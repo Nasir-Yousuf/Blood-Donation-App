@@ -1,5 +1,7 @@
+'use client';
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../store/slices/authSlice';
 
@@ -8,7 +10,7 @@ const Menu = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const navigate = useNavigate();
+  const router = useRouter();
   const dispatch = useDispatch();
 
   // 1. Pull authentication state from Redux globally
@@ -24,7 +26,7 @@ const Menu = () => {
   const handleLogout = () => {
     dispatch(logout());
     closeMenu();
-    navigate('/login');
+    router.push('/login');
   };
 
   // Close dropdown if clicked outside
@@ -45,7 +47,7 @@ const Menu = () => {
           {/* Logo / Brand Name */}
           <div className="flex flex-shrink-0 items-center">
             <Link
-              to="/"
+              href="/"
               onClick={closeMenu}
               className="flex items-center gap-2"
             >
@@ -67,19 +69,19 @@ const Menu = () => {
           {/* Desktop Navigation Links */}
           <div className="hidden items-center space-x-8 md:flex">
             <Link
-              to="/donor"
+              href="/donor"
               className="text-sm font-bold text-gray-500 transition-colors hover:text-gray-900"
             >
               Find Donors
             </Link>
             <Link
-              to="/emergency"
+              href="/emergency"
               className="text-sm font-bold text-gray-500 transition-colors hover:text-gray-900"
             >
               Emergency
             </Link>
             <Link
-              to="/impact"
+              href="/impact"
               className="text-sm font-bold text-gray-500 transition-colors hover:text-gray-900"
             >
               Impact
@@ -92,13 +94,13 @@ const Menu = () => {
               <>
                 {/* 2. Logged Out View: Simple text link and bold CTA button */}
                 <Link
-                  to="/login"
+                  href="/login"
                   className="px-4 text-sm font-bold text-gray-500 transition-colors hover:text-gray-900"
                 >
                   Login
                 </Link>
                 <Link
-                  to="/registration"
+                  href="/registration"
                   className="rounded-xl bg-[#D32F2F] px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-red-500/20 transition-colors hover:bg-red-800"
                 >
                   Register
@@ -111,7 +113,7 @@ const Menu = () => {
               >
                 {/* 3. Logged In View: Quick link to dashboard and Profile Dropdown */}
                 <Link
-                  to="/dashboard"
+                  href="/dashboard"
                   className="text-sm font-bold text-gray-500 transition-colors hover:text-gray-900"
                 >
                   Dashboard
@@ -138,7 +140,7 @@ const Menu = () => {
                 {isDropdownOpen && (
                   <div className="absolute top-full right-0 mt-2 w-48 overflow-hidden rounded-2xl border border-gray-100 bg-white py-2 shadow-xl">
                     <Link
-                      to="/profile"
+                      href="/profile"
                       onClick={closeMenu}
                       className="block px-5 py-2.5 text-sm font-bold text-gray-700 hover:bg-gray-50 hover:text-[#D32F2F]"
                     >
@@ -221,14 +223,14 @@ const Menu = () => {
             {isAuthenticated && (
               <>
                 <Link
-                  to="/dashboard"
+                  href="/dashboard"
                   onClick={closeMenu}
                   className="block rounded-xl px-4 py-3 text-base font-bold text-gray-700 hover:bg-red-50 hover:text-[#D32F2F]"
                 >
                   Dashboard
                 </Link>
                 <Link
-                  to="/profile"
+                  href="/profile"
                   onClick={closeMenu}
                   className="block rounded-xl px-4 py-3 text-base font-bold text-gray-700 hover:bg-red-50 hover:text-[#D32F2F]"
                 >
@@ -239,21 +241,21 @@ const Menu = () => {
             )}
 
             <Link
-              to="/donor"
+              href="/donor"
               onClick={closeMenu}
               className="block rounded-xl px-4 py-3 text-base font-bold text-gray-700 hover:bg-gray-50"
             >
               Find Donors
             </Link>
             <Link
-              to="/emergency"
+              href="/emergency"
               onClick={closeMenu}
               className="block rounded-xl px-4 py-3 text-base font-bold text-gray-700 hover:bg-gray-50"
             >
               Emergency
             </Link>
             <Link
-              to="/impact"
+              href="/impact"
               onClick={closeMenu}
               className="block rounded-xl px-4 py-3 text-base font-bold text-gray-700 hover:bg-gray-50"
             >
@@ -264,14 +266,14 @@ const Menu = () => {
               {!isAuthenticated ? (
                 <>
                   <Link
-                    to="/login"
+                    href="/login"
                     onClick={closeMenu}
                     className="block py-3 text-center text-base font-bold text-gray-700"
                   >
                     Login
                   </Link>
                   <Link
-                    to="/registration"
+                    href="/registration"
                     onClick={closeMenu}
                     className="w-full rounded-xl bg-[#D32F2F] px-4 py-3.5 text-center text-base font-bold text-white shadow-md shadow-red-500/20"
                   >
