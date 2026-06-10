@@ -55,9 +55,9 @@ export default function DashBoard() {
           api.get('/requests/nearby/20', config).catch(() => ({ data: { data: [] } })),
         ]);
 
-        const donations = donationsRes.data?.data || [];
-        const requests = requestsRes.data?.data || [];
-        const nearby = nearbyRes.data?.data || [];
+        const donations = donationsRes.data?.data?.requests || [];
+        const requests = requestsRes.data?.data?.requests || [];
+        const nearby = nearbyRes.data?.data?.requests || [];
 
         const totalDonations = donations.length;
         const requestsMade = requests.length;

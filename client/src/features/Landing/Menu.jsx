@@ -1,9 +1,9 @@
-'use client';
-import React, { useState, useRef, useEffect } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../../store/slices/authSlice';
+"use client";
+import React, { useState, useRef, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../../store/slices/authSlice";
 
 const Menu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,7 +26,7 @@ const Menu = () => {
   const handleLogout = () => {
     dispatch(logout());
     closeMenu();
-    router.push('/login');
+    router.push("/login");
   };
 
   // Close dropdown if clicked outside
@@ -36,8 +36,8 @@ const Menu = () => {
         setIsDropdownOpen(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -126,7 +126,7 @@ const Menu = () => {
                 >
                   <div className="hidden text-right lg:block">
                     <p className="text-sm leading-none font-bold text-gray-900">
-                      {user?.name?.split(' ')[0]}
+                      {user?.name?.split(" ")[0]}
                     </p>
                   </div>
                   <img
