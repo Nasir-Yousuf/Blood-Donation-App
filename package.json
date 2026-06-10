@@ -1,15 +1,5 @@
 {
-  "dependencies": {
-    "dotenv": "^17.3.1",
-    "framer-motion": "^12.38.0",
-    "lucide-react": "^0.577.0",
-    "mongodb": "^7.1.1",
-    "mongoose": "^9.3.2",
-    "morgan": "^1.10.1",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "react-hook-form": "^7.72.0"
-  },
+
   "name": "blood-donation-application",
   "version": "1.0.0",
   "description": "A full-stack MERN application that connects blood donors with people in need through location-based search and emergency request features.",
