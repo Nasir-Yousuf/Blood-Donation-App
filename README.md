@@ -147,8 +147,9 @@ The Blood Donation Application API provides secure endpoints for user management
 ⸻
 
 🌐 Deployment
-• Backend → Render (planned)
-• Frontend → Vercel / Netlify (planned)
+• **Frontend**: Hosted on [Vercel](https://vercel.com)
+• **Backend**: Hosted on [Render](https://render.com)
+  - API Base URL: `https://blood-donation-app-c6ft.onrender.com/api/v1`
 
 ⸻
 
