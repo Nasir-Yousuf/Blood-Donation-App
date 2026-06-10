@@ -1,5 +1,7 @@
 # 🩸 Blood Donation Application
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-black?style=for-the-badge&logo=vercel)](https://blood-donation-app-1ecj-nasiryousufs-projects.vercel.app/)
+
 A full-stack application designed to connect blood donors with people in need through location-based search, real-time request handling, and secure authentication.
 
 ---
@@ -87,7 +89,7 @@ npm run dev
 
 ## 🌐 Deployment
 
-- **Frontend**: Hosted on [Vercel](https://vercel.com)
+- **Frontend**: [Live on Vercel](https://blood-donation-app-1ecj-nasiryousufs-projects.vercel.app/)
 - **Backend**: Hosted on [Render](https://render.com)
   - API Base URL: `https://blood-donation-app-c6ft.onrender.com/api/v1`
 
