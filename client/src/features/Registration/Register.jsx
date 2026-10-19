@@ -137,7 +137,7 @@ const RegistrationForm = () => {
   return (
     <form
       onSubmit={onSubmit}
-      className="w-full rounded-[32px] bg-white p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] sm:p-10"
+      className="w-full rounded-[32px] bg-white p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] sm:p-10 dark:border dark:border-slate-800 dark:bg-slate-900"
     >
       {/* --- Personal Identity Section --- */}
       <div className="mb-10">
@@ -154,11 +154,11 @@ const RegistrationForm = () => {
               clipRule="evenodd"
             />
           </svg>
-          <h2 className="text-lg font-bold text-gray-900">Personal Identity</h2>
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white">Personal Identity</h2>
         </div>
 
         <div className="mb-4">
-          <label className="mb-2 block text-xs font-bold text-gray-700">
+          <label className="mb-2 block text-xs font-bold text-gray-700 dark:text-slate-300">
             Full Legal Name
           </label>
           <input
@@ -168,13 +168,13 @@ const RegistrationForm = () => {
             required
             type="text"
             placeholder="e.g. Julianne Sterling"
-            className="w-full rounded-2xl border-none bg-[#F4F4F5] px-5 py-4 text-sm text-gray-800 placeholder-gray-400 transition-all focus:ring-2 focus:ring-[#D32F2F]/20 focus:outline-none"
+            className="w-full rounded-2xl border border-transparent bg-[#F4F4F5] px-5 py-4 text-sm text-gray-800 placeholder-gray-400 transition-all focus:ring-2 focus:ring-[#D32F2F]/20 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
           />
         </div>
 
         <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-2 block text-xs font-bold text-gray-700">
+            <label className="mb-2 block text-xs font-bold text-gray-700 dark:text-slate-300">
               Email Address
             </label>
             <input
@@ -184,11 +184,11 @@ const RegistrationForm = () => {
               required
               type="email"
               placeholder="name@example.com"
-              className="w-full rounded-2xl border-none bg-[#F4F4F5] px-5 py-4 text-sm text-gray-800 placeholder-gray-400 transition-all focus:ring-2 focus:ring-[#D32F2F]/20 focus:outline-none"
+              className="w-full rounded-2xl border border-transparent bg-[#F4F4F5] px-5 py-4 text-sm text-gray-800 placeholder-gray-400 transition-all focus:ring-2 focus:ring-[#D32F2F]/20 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
             />
           </div>
           <div>
-            <label className="mb-2 block text-xs font-bold text-gray-700">
+            <label className="mb-2 block text-xs font-bold text-gray-700 dark:text-slate-300">
               Mobile Number
             </label>
             <input
@@ -198,14 +198,14 @@ const RegistrationForm = () => {
               required
               type="tel"
               placeholder="+1 (555) 000-0000"
-              className="w-full rounded-2xl border-none bg-[#F4F4F5] px-5 py-4 text-sm text-gray-800 placeholder-gray-400 transition-all focus:ring-2 focus:ring-[#D32F2F]/20 focus:outline-none"
+              className="w-full rounded-2xl border border-transparent bg-[#F4F4F5] px-5 py-4 text-sm text-gray-800 placeholder-gray-400 transition-all focus:ring-2 focus:ring-[#D32F2F]/20 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
             />
           </div>
         </div>
 
         <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-2 block text-xs font-bold text-gray-700">
+            <label className="mb-2 block text-xs font-bold text-gray-700 dark:text-slate-300">
               Password
             </label>
             <input
@@ -216,11 +216,11 @@ const RegistrationForm = () => {
               minLength="6"
               type="password"
               placeholder="••••••••"
-              className="w-full rounded-2xl border-none bg-[#F4F4F5] px-5 py-4 text-sm text-gray-800 placeholder-gray-400 transition-all focus:ring-2 focus:ring-[#D32F2F]/20 focus:outline-none"
+              className="w-full rounded-2xl border border-transparent bg-[#F4F4F5] px-5 py-4 text-sm text-gray-800 placeholder-gray-400 transition-all focus:ring-2 focus:ring-[#D32F2F]/20 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
             />
           </div>
           <div>
-            <label className="mb-2 block text-xs font-bold text-gray-700">
+            <label className="mb-2 block text-xs font-bold text-gray-700 dark:text-slate-300">
               Gender
             </label>
             <div className="relative">
@@ -229,16 +229,16 @@ const RegistrationForm = () => {
                 value={formData.gender}
                 onChange={handleChange}
                 required
-                className="w-full appearance-none rounded-2xl border-none bg-[#F4F4F5] px-5 py-4 text-sm text-gray-800 transition-all focus:ring-2 focus:ring-[#D32F2F]/20 focus:outline-none"
+                className="w-full appearance-none rounded-2xl border border-transparent bg-[#F4F4F5] px-5 py-4 text-sm text-gray-800 transition-all focus:ring-2 focus:ring-[#D32F2F]/20 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               >
-                <option value="" disabled>
+                <option value="" disabled className="dark:bg-slate-900">
                   Select gender
                 </option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
+                <option value="male" className="dark:bg-slate-900">Male</option>
+                <option value="female" className="dark:bg-slate-900">Female</option>
+                <option value="other" className="dark:bg-slate-900">Other</option>
               </select>
-              <div className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-gray-500">
+              <div className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-gray-500 dark:text-slate-400">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -259,7 +259,7 @@ const RegistrationForm = () => {
         </div>
 
         <div>
-          <label className="mb-2 block text-xs font-bold text-gray-700">
+          <label className="mb-2 block text-xs font-bold text-gray-700 dark:text-slate-300">
             Location / City
           </label>
           <div className="relative">
@@ -270,14 +270,14 @@ const RegistrationForm = () => {
               required
               type="text"
               placeholder="Click target icon to detect location ->"
-              className="w-full cursor-default rounded-2xl border-none bg-[#F4F4F5] py-4 pr-12 pl-5 text-sm text-gray-800 placeholder-gray-400 transition-all focus:ring-2 focus:ring-[#D32F2F]/20 focus:outline-none"
+              className="w-full cursor-default rounded-2xl border border-transparent bg-[#F4F4F5] py-4 pr-12 pl-5 text-sm text-gray-800 placeholder-gray-400 transition-all focus:ring-2 focus:ring-[#D32F2F]/20 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
             />
             <button
               type="button"
               onClick={handleGetLocation}
               disabled={isLocating}
               title="Detect Location"
-              className="absolute top-1/2 right-4 -translate-y-1/2 text-gray-400 transition-colors outline-none hover:text-[#D32F2F] disabled:opacity-50"
+              className="absolute top-1/2 right-4 -translate-y-1/2 text-gray-400 transition-colors outline-none hover:text-[#D32F2F] disabled:opacity-50 dark:text-slate-400 dark:hover:text-red-400"
             >
               {isLocating ? (
                 <svg
@@ -330,9 +330,9 @@ const RegistrationForm = () => {
           >
             <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
           </svg>
-          <h2 className="text-lg font-bold text-gray-900">Clinical Grouping</h2>
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white">Clinical Grouping</h2>
         </div>
-        <p className="mb-5 text-xs text-gray-500">Select your blood type.</p>
+        <p className="mb-5 text-xs text-gray-500 dark:text-slate-400">Select your blood type.</p>
 
         <div className="mb-8 flex flex-wrap gap-2.5">
           {bloodGroups.map((bg) => (
@@ -342,19 +342,19 @@ const RegistrationForm = () => {
               onClick={() =>
                 setFormData((prev) => ({ ...prev, bloodType: bg }))
               }
-              className={`min-w-[50px] flex-1 rounded-2xl py-3.5 text-sm font-bold transition-all outline-none sm:min-w-[60px] ${formData.bloodType === bg ? 'scale-105 transform bg-[#D32F2F] text-white shadow-lg shadow-red-500/40 focus:ring-2 focus:ring-[#D32F2F] focus:ring-offset-2' : 'bg-[#F4F4F5] text-gray-600 hover:bg-gray-200 focus:ring-2 focus:ring-gray-300'}`}
+              className={`min-w-[50px] flex-1 rounded-2xl py-3.5 text-sm font-bold transition-all outline-none sm:min-w-[60px] ${formData.bloodType === bg ? 'scale-105 transform bg-[#D32F2F] text-white shadow-lg shadow-red-500/40 focus:ring-2 focus:ring-[#D32F2F] focus:ring-offset-2' : 'bg-[#F4F4F5] text-gray-600 hover:bg-gray-200 focus:ring-2 focus:ring-gray-300 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'}`}
             >
               {bg}
             </button>
           ))}
         </div>
 
-        <div className="flex items-center justify-between rounded-2xl bg-[#F4F4F5] p-5">
+        <div className="flex items-center justify-between rounded-2xl bg-[#F4F4F5] p-5 dark:bg-slate-800/80">
           <div>
-            <p className="text-sm font-bold text-gray-900">
+            <p className="text-sm font-bold text-gray-900 dark:text-white">
               Available to donate
             </p>
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-gray-500 dark:text-slate-400">
               Appear in emergency searches.
             </p>
           </div>
@@ -366,7 +366,7 @@ const RegistrationForm = () => {
                 isAvailable: !prev.isAvailable,
               }))
             }
-            className={`relative inline-flex h-8 w-14 shrink-0 items-center rounded-full transition-colors focus:ring-2 focus:ring-[#D32F2F] focus:ring-offset-2 focus:outline-none ${formData.isAvailable ? 'bg-[#D32F2F]' : 'bg-gray-300'}`}
+            className={`relative inline-flex h-8 w-14 shrink-0 items-center rounded-full transition-colors focus:ring-2 focus:ring-[#D32F2F] focus:ring-offset-2 focus:outline-none ${formData.isAvailable ? 'bg-[#D32F2F]' : 'bg-gray-300 dark:bg-slate-700'}`}
           >
             <span
               className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${formData.isAvailable ? 'translate-x-7' : 'translate-x-1'}`}
@@ -376,11 +376,11 @@ const RegistrationForm = () => {
       </div>
 
       {/* --- Action Buttons --- */}
-      <div className="mt-10 flex flex-col-reverse items-center justify-between gap-4 border-t border-gray-100 pt-6 sm:flex-row">
+      <div className="mt-10 flex flex-col-reverse items-center justify-between gap-4 border-t border-gray-100 pt-6 sm:flex-row dark:border-slate-800">
         <Link href="/">
           <button
             type="button"
-            className="text-sm font-bold text-gray-500 underline decoration-gray-300 underline-offset-4 transition-colors outline-none hover:text-gray-900 focus:text-gray-900"
+            className="text-sm font-bold text-gray-500 underline decoration-gray-300 underline-offset-4 transition-colors outline-none hover:text-gray-900 focus:text-gray-900 dark:text-slate-400 dark:decoration-slate-700 dark:hover:text-white"
           >
             Skip for now
           </button>
@@ -395,12 +395,12 @@ const RegistrationForm = () => {
       </div>
 
       {/* --- Login Redirect Section --- */}
-      <div className="mt-8 border-t border-gray-100 pt-6 text-center">
-        <p className="text-sm font-medium text-gray-600">
+      <div className="mt-8 border-t border-gray-100 pt-6 text-center dark:border-slate-800">
+        <p className="text-sm font-medium text-gray-600 dark:text-slate-400">
           Already have an account?{' '}
           <Link
             href="/login"
-            className="rounded-sm px-1 font-bold text-[#D32F2F] transition-colors outline-none hover:text-[#B71C1C] hover:underline focus:ring-2 focus:ring-[#D32F2F]"
+            className="rounded-sm px-1 font-bold text-[#D32F2F] transition-colors outline-none hover:text-[#B71C1C] hover:underline focus:ring-2 focus:ring-[#D32F2F] dark:text-red-400 dark:hover:text-red-300"
           >
             Log in here
           </Link>
@@ -412,7 +412,7 @@ const RegistrationForm = () => {
 
 export default function RegisterPage() {
   return (
-    <div className="flex min-h-screen items-start justify-center bg-[#F8F9FA] px-4 py-10 font-sans text-gray-900 md:px-8">
+    <div className="flex min-h-screen items-start justify-center bg-[#F8F9FA] px-4 py-10 font-sans text-gray-900 md:px-8 dark:bg-[#090d16] dark:text-white transition-colors">
       <div className="flex w-full max-w-3xl justify-center">
         <RegistrationForm />
       </div>

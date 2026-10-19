@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import api from '../../api/axiosInstance';
+import { useLanguage } from '../../context/LanguageContext';
 
 // Helper function to calculate "Posted X minutes ago"
 const timeAgo = (date) => {
@@ -37,6 +38,7 @@ const formatValidPhone = (phone) => {
 
 export default function Emergency() {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState('feed');
 
   // ==========================================
@@ -268,12 +270,12 @@ export default function Emergency() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#F4F7FB] pb-32 font-sans text-gray-900 md:pb-10">
+    <div className="relative min-h-screen bg-[#F4F7FB] pb-32 font-sans text-gray-900 md:pb-10 dark:bg-[#0b0f19] dark:text-gray-100">
       {/* TOAST NOTIFICATION OVERLAY */}
       {toast && (
         <div className="animate-fade-in-down fixed top-4 left-1/2 z-50 w-[90%] max-w-sm -translate-x-1/2 rounded-2xl shadow-xl transition-all">
           <div
-            className={`flex items-center gap-3 rounded-2xl border px-5 py-4 ${toast.type === 'error' ? 'border-red-200 bg-red-50 text-red-800' : 'border-green-200 bg-green-50 text-green-800'}`}
+            className={`flex items-center gap-3 rounded-2xl border px-5 py-4 ${toast.type === 'error' ? 'border-red-200 bg-red-50 text-red-800 dark:border-red-900/50 dark:bg-red-950/80 dark:text-red-300' : 'border-green-200 bg-green-50 text-green-800 dark:border-emerald-900/50 dark:bg-emerald-950/80 dark:text-emerald-300'}`}
           >
             {toast.type === 'error' ? (
               <svg
@@ -311,9 +313,9 @@ export default function Emergency() {
 
       {/* DELETE CONFIRMATION MODAL */}
       {deleteConfirmId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/40 px-4 backdrop-blur-sm transition-opacity">
-          <div className="w-full max-w-sm scale-100 rounded-[32px] bg-white p-6 shadow-2xl transition-transform">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-600">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/40 px-4 backdrop-blur-sm transition-opacity dark:bg-black/70">
+          <div className="w-full max-w-sm scale-100 rounded-[32px] bg-white p-6 shadow-2xl transition-transform dark:bg-gray-900 dark:border dark:border-gray-800">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-600 dark:bg-red-950/50 dark:text-red-400">
               <svg
                 className="h-8 w-8"
                 fill="none"
@@ -328,17 +330,17 @@ export default function Emergency() {
                 />
               </svg>
             </div>
-            <h3 className="mb-2 text-center text-xl font-extrabold text-gray-900">
+            <h3 className="mb-2 text-center text-xl font-extrabold text-gray-900 dark:text-gray-100">
               Delete Request?
             </h3>
-            <p className="mb-6 text-center text-sm font-medium text-gray-500">
+            <p className="mb-6 text-center text-sm font-medium text-gray-500 dark:text-gray-400">
               This action cannot be undone. Your request will be permanently
               removed from the emergency feed.
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setDeleteConfirmId(null)}
-                className="flex-1 rounded-2xl bg-gray-100 py-3.5 text-sm font-bold text-gray-700 transition hover:bg-gray-200"
+                className="flex-1 rounded-2xl bg-gray-100 py-3.5 text-sm font-bold text-gray-700 transition hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
               >
                 Cancel
               </button>
@@ -355,18 +357,18 @@ export default function Emergency() {
 
       <div className="mx-auto max-w-4xl px-4 pt-6 lg:pt-10">
         <div className="mb-8 flex justify-center">
-          <div className="relative inline-flex w-full max-w-sm rounded-full bg-gray-200/80 p-1">
+          <div className="relative inline-flex w-full max-w-sm rounded-full bg-gray-200/80 p-1 dark:bg-gray-800">
             <button
               onClick={() => setActiveTab('request')}
-              className={`z-10 flex-1 rounded-full py-3 text-sm font-bold transition-all ${activeTab === 'request' ? 'bg-white text-[#D32F2F] shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+              className={`z-10 flex-1 rounded-full py-3 text-sm font-bold transition-all ${activeTab === 'request' ? 'bg-white text-[#D32F2F] shadow-sm dark:bg-gray-900 dark:text-red-400' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'}`}
             >
-              Emergency Post
+              {t('tabPost', 'Emergency Post')}
             </button>
             <button
               onClick={() => setActiveTab('feed')}
-              className={`z-10 flex-1 rounded-full py-3 text-sm font-bold transition-all ${activeTab === 'feed' ? 'bg-white text-[#006064] shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+              className={`z-10 flex-1 rounded-full py-3 text-sm font-bold transition-all ${activeTab === 'feed' ? 'bg-white text-[#006064] shadow-sm dark:bg-gray-900 dark:text-cyan-400' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'}`}
             >
-              Emergency Feed
+              {t('tabFeed', 'Emergency Feed')}
             </button>
           </div>
         </div>
@@ -377,7 +379,7 @@ export default function Emergency() {
               <select
                 value={filterUrgency}
                 onChange={(e) => setFilterUrgency(e.target.value)}
-                className="flex-1 rounded-xl border-none bg-white px-4 py-3 text-sm font-bold text-gray-700 shadow-sm transition-all outline-none focus:ring-2 focus:ring-[#D32F2F]/20"
+                className="flex-1 rounded-xl border border-transparent bg-white px-4 py-3 text-sm font-bold text-gray-700 shadow-sm transition-all outline-none focus:ring-2 focus:ring-[#D32F2F]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
               >
                 <option value="">All Urgencies</option>
                 <option value="High">High</option>
@@ -387,7 +389,7 @@ export default function Emergency() {
               <select
                 value={filterBlood}
                 onChange={(e) => setFilterBlood(e.target.value)}
-                className="flex-1 rounded-xl border-none bg-white px-4 py-3 text-sm font-bold text-gray-700 shadow-sm transition-all outline-none focus:ring-2 focus:ring-[#D32F2F]/20"
+                className="flex-1 rounded-xl border border-transparent bg-white px-4 py-3 text-sm font-bold text-gray-700 shadow-sm transition-all outline-none focus:ring-2 focus:ring-[#D32F2F]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
               >
                 <option value="">All Blood</option>
                 <option value="A+">A+</option>
@@ -402,7 +404,7 @@ export default function Emergency() {
               <select
                 value={filterDistance}
                 onChange={(e) => setFilterDistance(e.target.value)}
-                className="flex-1 rounded-xl border-none bg-white px-4 py-3 text-sm font-bold text-gray-700 shadow-sm transition-all outline-none focus:ring-2 focus:ring-[#D32F2F]/20"
+                className="flex-1 rounded-xl border border-transparent bg-white px-4 py-3 text-sm font-bold text-gray-700 shadow-sm transition-all outline-none focus:ring-2 focus:ring-[#D32F2F]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
               >
                 <option value="">Any Distance</option>
                 <option value="5">Within 5 km</option>
@@ -414,20 +416,20 @@ export default function Emergency() {
             {feedLoading ? (
               <div className="flex flex-col items-center justify-center py-20">
                 <div className="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-[#D32F2F]/20 border-t-[#D32F2F]"></div>
-                <p className="animate-pulse text-sm font-bold text-gray-500">
+                <p className="animate-pulse text-sm font-bold text-gray-500 dark:text-slate-400">
                   Locating nearby emergencies...
                 </p>
               </div>
             ) : feedError ? (
-              <div className="rounded-2xl border border-red-100 bg-red-50 p-5 text-center text-sm font-bold text-red-600">
+              <div className="rounded-2xl border border-red-100 bg-red-50 p-5 text-center text-sm font-bold text-red-600 dark:border-red-900/50 dark:bg-red-950/50 dark:text-red-400">
                 {feedError}
               </div>
             ) : feedData.length === 0 ? (
-              <div className="rounded-[32px] border border-gray-100 bg-white py-16 text-center shadow-sm">
-                <p className="mb-1 text-lg font-extrabold text-gray-900">
+              <div className="rounded-[32px] border border-gray-100 bg-white py-16 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                <p className="mb-1 text-lg font-extrabold text-gray-900 dark:text-white">
                   Area Secure
                 </p>
-                <p className="text-sm font-medium text-gray-500">
+                <p className="text-sm font-medium text-gray-500 dark:text-slate-400">
                   No active emergencies match your filters.
                 </p>
               </div>
@@ -439,7 +441,11 @@ export default function Emergency() {
                   return (
                     <div
                       key={req._id}
-                      className={`relative w-full rounded-[24px] border border-gray-200 bg-[#F8F9FA] p-5 transition-transform hover:-translate-y-1 ${req.urgency === 'Life-Threatening' ? 'border-red-400 shadow-[0_0_20px_rgba(220,38,38,0.4)]' : ''}`}
+                      className={`relative w-full rounded-[24px] border border-gray-200 bg-[#F8F9FA] p-5 transition-transform hover:-translate-y-1 dark:border-slate-800 dark:bg-slate-900 ${
+                        req.urgency === 'Life-Threatening'
+                          ? 'border-red-400 shadow-[0_0_20px_rgba(220,38,38,0.4)]'
+                          : ''
+                      }`}
                     >
                       <div className="mb-2">
                         <span
@@ -449,14 +455,14 @@ export default function Emergency() {
                         </span>
                       </div>
 
-                      <div className="absolute top-5 right-5 flex h-12 w-12 items-center justify-center rounded-full border-2 border-white bg-red-50 shadow-sm">
-                        <span className="text-lg font-bold text-red-500">
+                      <div className="absolute top-5 right-5 flex h-12 w-12 items-center justify-center rounded-full border-2 border-white bg-red-50 shadow-sm dark:border-slate-800 dark:bg-red-950/40">
+                        <span className="text-lg font-bold text-red-500 dark:text-red-400">
                           {req.bloodType}
                         </span>
                       </div>
 
                       <div className="mb-4 flex flex-wrap items-center gap-2 pr-14">
-                        <h3 className="text-xl font-extrabold tracking-tight text-gray-900">
+                        <h3 className="text-xl font-extrabold tracking-tight text-gray-900 dark:text-white">
                           {req.patientName}
                         </h3>
                         <span
@@ -467,9 +473,9 @@ export default function Emergency() {
                         </span>
                       </div>
 
-                      <div className="mb-2 flex items-center gap-2 text-[13px] font-medium text-gray-600">
+                      <div className="mb-2 flex items-center gap-2 text-[13px] font-medium text-gray-600 dark:text-slate-400">
                         <svg
-                          className="h-4 w-4 shrink-0 text-[#8B1C1C]"
+                          className="h-4 w-4 shrink-0 text-[#8B1C1C] dark:text-red-400"
                           fill="currentColor"
                           viewBox="0 0 20 20"
                         >
@@ -487,9 +493,9 @@ export default function Emergency() {
                         )}
                       </div>
 
-                      <div className="mb-5 flex items-center gap-2 text-[13px] font-medium text-gray-600">
+                      <div className="mb-5 flex items-center gap-2 text-[13px] font-medium text-gray-600 dark:text-slate-400">
                         <svg
-                          className="h-4 w-4 shrink-0 text-[#8B1C1C]"
+                          className="h-4 w-4 shrink-0 text-[#8B1C1C] dark:text-red-400"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -529,7 +535,7 @@ export default function Emergency() {
                           href={`https://api.whatsapp.com/send?phone=${validPhone}`}
                           target="_blank"
                           rel="noreferrer"
-                          className="flex flex-1 items-center justify-center gap-1 rounded-xl bg-[#E4E4E5] py-2.5 text-[11px] font-bold text-gray-700 transition hover:bg-gray-300"
+                          className="flex flex-1 items-center justify-center gap-1 rounded-xl bg-[#E4E4E5] py-2.5 text-[11px] font-bold text-gray-700 transition hover:bg-gray-300 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
                         >
                           <svg
                             className="h-3.5 w-3.5 shrink-0"
@@ -545,7 +551,7 @@ export default function Emergency() {
                           href={`https://www.google.com/maps/dir/?api=1&destination=${req.location.coordinates[1]},${req.location.coordinates[0]}`}
                           target="_blank"
                           rel="noreferrer"
-                          className="flex flex-1 items-center justify-center gap-1 rounded-xl bg-[#E4E4E5] py-2.5 text-[11px] font-bold text-gray-700 transition hover:bg-gray-300"
+                          className="flex flex-1 items-center justify-center gap-1 rounded-xl bg-[#E4E4E5] py-2.5 text-[11px] font-bold text-gray-700 transition hover:bg-gray-300 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
                         >
                           <svg
                             className="h-3.5 w-3.5 shrink-0"
@@ -591,17 +597,17 @@ export default function Emergency() {
         {activeTab === 'request' && (
           <form
             onSubmit={handlePostRequest}
-            className="rounded-[32px] border border-gray-100 bg-white p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] lg:p-8"
+            className="rounded-[32px] border border-gray-100 bg-white p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] lg:p-8 dark:border-slate-800 dark:bg-slate-900"
           >
             {!isAuthenticated && (
-              <div className="mb-6 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm font-medium text-blue-700">
+              <div className="mb-6 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm font-medium text-blue-700 dark:border-blue-900/50 dark:bg-blue-950/40 dark:text-blue-300">
                 You are posting as a guest. Logging in allows you to manage and
                 track your requests later!
               </div>
             )}
             <div className="mb-5 grid grid-cols-1 gap-5 md:grid-cols-2">
               <div>
-                <label className="mb-2 block text-[11px] font-bold tracking-widest text-gray-500 uppercase">
+                <label className="mb-2 block text-[11px] font-bold tracking-widest text-gray-500 uppercase dark:text-slate-400">
                   Patient Name
                 </label>
                 <input
@@ -609,11 +615,11 @@ export default function Emergency() {
                   name="patientName"
                   required
                   placeholder="Enter patient's full name"
-                  className="w-full rounded-2xl border-none bg-[#F4F4F5] px-5 py-4 text-sm font-medium text-gray-900 transition-all outline-none focus:ring-2 focus:ring-[#D32F2F]/20"
+                  className="w-full rounded-2xl border border-transparent bg-[#F4F4F5] px-5 py-4 text-sm font-medium text-gray-900 transition-all outline-none focus:ring-2 focus:ring-[#D32F2F]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500"
                 />
               </div>
               <div>
-                <label className="mb-2 block text-[11px] font-bold tracking-widest text-gray-500 uppercase">
+                <label className="mb-2 block text-[11px] font-bold tracking-widest text-gray-500 uppercase dark:text-slate-400">
                   Contact Number
                 </label>
                 <input
@@ -621,12 +627,12 @@ export default function Emergency() {
                   name="contactNumber"
                   required
                   placeholder="+1 (555) 000-0000"
-                  className="w-full rounded-2xl border-none bg-[#F4F4F5] px-5 py-4 text-sm font-medium text-gray-900 transition-all outline-none focus:ring-2 focus:ring-[#D32F2F]/20"
+                  className="w-full rounded-2xl border border-transparent bg-[#F4F4F5] px-5 py-4 text-sm font-medium text-gray-900 transition-all outline-none focus:ring-2 focus:ring-[#D32F2F]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500"
                 />
               </div>
             </div>
             <div className="mb-6">
-              <label className="mb-2 block text-[11px] font-bold tracking-widest text-gray-500 uppercase">
+              <label className="mb-2 block text-[11px] font-bold tracking-widest text-gray-500 uppercase dark:text-slate-400">
                 Blood Type Needed
               </label>
               <div className="relative">
@@ -634,21 +640,21 @@ export default function Emergency() {
                   name="bloodType"
                   required
                   defaultValue=""
-                  className="w-full appearance-none rounded-2xl border-none bg-[#F4F4F5] px-5 py-4 text-sm font-extrabold text-gray-900 transition-all outline-none focus:ring-2 focus:ring-[#D32F2F]/20"
+                  className="w-full appearance-none rounded-2xl border border-transparent bg-[#F4F4F5] px-5 py-4 text-sm font-extrabold text-gray-900 transition-all outline-none focus:ring-2 focus:ring-[#D32F2F]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                 >
-                  <option value="" disabled>
+                  <option value="" disabled className="dark:bg-slate-900">
                     Select Blood Type
                   </option>
-                  <option value="A+">A+</option>
-                  <option value="A-">A-</option>
-                  <option value="B+">B+</option>
-                  <option value="B-">B-</option>
-                  <option value="AB+">AB+</option>
-                  <option value="AB-">AB-</option>
-                  <option value="O+">O+</option>
-                  <option value="O-">O-</option>
+                  <option value="A+" className="dark:bg-slate-900">A+</option>
+                  <option value="A-" className="dark:bg-slate-900">A-</option>
+                  <option value="B+" className="dark:bg-slate-900">B+</option>
+                  <option value="B-" className="dark:bg-slate-900">B-</option>
+                  <option value="AB+" className="dark:bg-slate-900">AB+</option>
+                  <option value="AB-" className="dark:bg-slate-900">AB-</option>
+                  <option value="O+" className="dark:bg-slate-900">O+</option>
+                  <option value="O-" className="dark:bg-slate-900">O-</option>
                 </select>
-                <div className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-gray-400">
+                <div className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-gray-400 dark:text-slate-400">
                   <svg
                     className="h-5 w-5"
                     fill="none"
@@ -666,29 +672,29 @@ export default function Emergency() {
               </div>
             </div>
             <div className="mb-8">
-              <label className="mb-2 block text-[11px] font-bold tracking-widest text-gray-500 uppercase">
+              <label className="mb-2 block text-[11px] font-bold tracking-widest text-gray-500 uppercase dark:text-slate-400">
                 Urgency Level
               </label>
-              <div className="flex rounded-2xl bg-[#F4F4F5] p-1">
+              <div className="flex rounded-2xl bg-[#F4F4F5] p-1 dark:bg-slate-800">
                 {['High', 'Critical', 'Life-Threatening'].map((level) => (
                   <button
                     key={level}
                     type="button"
                     onClick={() => setUrgency(level)}
-                    className={`flex-1 rounded-xl py-3 text-xs font-bold transition-all ${urgency === level ? (level === 'Life-Threatening' ? 'bg-[#DC2626] text-white shadow-md' : level === 'Critical' ? 'bg-[#F97316] text-white shadow-md' : 'bg-[#FACC15] text-black shadow-md') : 'text-gray-500 hover:text-gray-700'}`}
+                    className={`flex-1 rounded-xl py-3 text-xs font-bold transition-all ${urgency === level ? (level === 'Life-Threatening' ? 'bg-[#DC2626] text-white shadow-md' : level === 'Critical' ? 'bg-[#F97316] text-white shadow-md' : 'bg-[#FACC15] text-black shadow-md') : 'text-gray-500 hover:text-gray-700 dark:text-slate-400 dark:hover:text-white'}`}
                   >
                     {level}
                   </button>
                 ))}
               </div>
             </div>
-            <div className="mb-6 rounded-[24px] border border-blue-100 bg-blue-50 p-5">
+            <div className="mb-6 rounded-[24px] border border-blue-100 bg-blue-50 p-5 dark:border-slate-800 dark:bg-slate-800/40">
               <div className="mb-4 flex items-center justify-between">
-                <label className="block text-[11px] font-bold tracking-widest text-blue-800 uppercase">
+                <label className="block text-[11px] font-bold tracking-widest text-blue-800 uppercase dark:text-blue-400">
                   Hospital & Location
                 </label>
                 {formCoords.lat && (
-                  <span className="rounded-md border border-green-200 bg-green-100 px-2 py-1 text-[10px] font-bold text-green-700 uppercase">
+                  <span className="rounded-md border border-green-200 bg-green-100 px-2 py-1 text-[10px] font-bold text-green-700 uppercase dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-400">
                     GPS Attached
                   </span>
                 )}
@@ -697,7 +703,7 @@ export default function Emergency() {
                 type="button"
                 onClick={handleGetLocation}
                 disabled={formLocating || formCoords.lat}
-                className={`mb-4 flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-bold transition-all ${formLocating ? 'cursor-wait border border-blue-200 bg-blue-100 text-blue-700' : formCoords.lat ? 'border border-green-600 bg-green-500 text-white shadow-md' : formLocationError ? 'border border-red-200 bg-red-50 text-red-600 shadow-sm hover:bg-red-100' : 'border border-blue-200 bg-white text-blue-700 shadow-sm hover:bg-blue-100'}`}
+                className={`mb-4 flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-bold transition-all ${formLocating ? 'cursor-wait border border-blue-200 bg-blue-100 text-blue-700 dark:border-blue-800 dark:bg-blue-950/60 dark:text-blue-300' : formCoords.lat ? 'border border-green-600 bg-green-500 text-white shadow-md' : formLocationError ? 'border border-red-200 bg-red-50 text-red-600 shadow-sm hover:bg-red-100 dark:border-red-900 dark:bg-red-950/50 dark:text-red-300' : 'border border-blue-200 bg-white text-blue-700 shadow-sm hover:bg-blue-100 dark:border-slate-700 dark:bg-slate-800 dark:text-blue-300 dark:hover:bg-slate-700'}`}
               >
                 {formLocating ? (
                   <>
@@ -786,26 +792,26 @@ export default function Emergency() {
                   name="hospitalName"
                   required
                   placeholder="Hospital / Clinic Name"
-                  className="w-full rounded-xl border-none bg-white px-4 py-3.5 text-sm font-medium text-gray-900 placeholder-gray-400 shadow-sm outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full rounded-xl border border-transparent bg-white px-4 py-3.5 text-sm font-medium text-gray-900 placeholder-gray-400 shadow-sm outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500"
                 />
                 <input
                   type="text"
                   name="hospitalAddress"
                   required
                   placeholder="Exact Address (e.g. 3rd Floor, ICU Room 402)"
-                  className="w-full rounded-xl border-none bg-white px-4 py-3.5 text-sm font-medium text-gray-900 placeholder-gray-400 shadow-sm outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full rounded-xl border border-transparent bg-white px-4 py-3.5 text-sm font-medium text-gray-900 placeholder-gray-400 shadow-sm outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500"
                 />
               </div>
             </div>
             <div className="mb-8">
-              <label className="mb-2 block text-[11px] font-bold tracking-widest text-gray-500 uppercase">
+              <label className="mb-2 block text-[11px] font-bold tracking-widest text-gray-500 uppercase dark:text-slate-400">
                 Case Details (Optional)
               </label>
               <textarea
                 name="caseDetails"
                 rows="3"
                 placeholder="Describe the medical situation..."
-                className="w-full resize-none rounded-2xl border-none bg-[#F4F4F5] px-5 py-4 text-sm font-medium text-gray-900 transition-all outline-none focus:ring-2 focus:ring-[#D32F2F]/20"
+                className="w-full resize-none rounded-2xl border border-transparent bg-[#F4F4F5] px-5 py-4 text-sm font-medium text-gray-900 transition-all outline-none focus:ring-2 focus:ring-[#D32F2F]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500"
               ></textarea>
             </div>
             <button

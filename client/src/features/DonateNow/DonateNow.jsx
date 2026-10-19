@@ -2,10 +2,8 @@
 import React, { useState } from 'react';
 
 // ==========================================
-// 1. MOCK API DATA (Cleaned up)
+// 1. MOCK API DATA
 // ==========================================
-// Notice how buttonTheme and buttonText are removed.
-// We now rely purely on the "urgency" data field.
 const MOCK_REQUESTS = [
   {
     id: 1,
@@ -65,18 +63,18 @@ const BLOOD_GROUPS = ['A+', 'O-', 'B+', 'AB-', 'A-', 'O+', 'B-', 'AB+'];
 // ==========================================
 
 const MobileHeader = () => (
-  <div className="sticky top-0 z-20 flex items-center justify-between border-b border-gray-100 bg-white px-4 py-4 lg:hidden">
+  <div className="sticky top-0 z-20 flex items-center justify-between border-b border-gray-100 bg-white px-4 py-4 lg:hidden dark:border-slate-800 dark:bg-slate-900">
     <div className="flex items-center gap-3">
       <img
         src="https://i.pravatar.cc/150?img=32"
         alt="User"
-        className="h-10 w-10 rounded-full border border-gray-200"
+        className="h-10 w-10 rounded-full border border-gray-200 dark:border-slate-700"
       />
-      <h1 className="text-xl font-extrabold text-[#D32F2F]">
+      <h1 className="text-xl font-black text-[#D32F2F] dark:text-red-400">
         Clinical Vitality
       </h1>
     </div>
-    <button className="text-gray-500 hover:text-gray-900">
+    <button className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
@@ -94,7 +92,7 @@ const MobileHeader = () => (
 );
 
 const MobileFilters = () => (
-  <div className="scrollbar-hide flex gap-2 overflow-x-auto bg-[#F9FAFB] px-4 py-4 lg:hidden">
+  <div className="scrollbar-hide flex gap-2 overflow-x-auto bg-[#F9FAFB] px-4 py-4 lg:hidden dark:bg-slate-900/50">
     <button className="flex shrink-0 items-center gap-2 rounded-full bg-[#D32F2F] px-5 py-2 text-sm font-bold text-white shadow-sm">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -113,7 +111,7 @@ const MobileFilters = () => (
     {['A+', 'O-', 'B+'].map((type) => (
       <button
         key={type}
-        className="shrink-0 rounded-full border border-gray-200 bg-white px-6 py-2 text-sm font-bold text-gray-700"
+        className="shrink-0 rounded-full border border-gray-200 bg-white px-6 py-2 text-sm font-bold text-gray-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
       >
         {type}
       </button>
@@ -126,14 +124,14 @@ const DesktopSidebar = () => {
 
   return (
     <div className="sticky top-10 hidden h-max w-[280px] shrink-0 flex-col gap-8 lg:flex">
-      <h2 className="text-xl font-extrabold text-gray-800">Refine Requests</h2>
+      <h2 className="text-xl font-extrabold text-gray-800 dark:text-white">Refine Requests</h2>
 
       {/* Search */}
       <div className="relative">
         <input
           type="text"
           placeholder="Search hospital or patient..."
-          className="w-full rounded-xl border-none bg-[#F4F4F5] py-3 pr-10 pl-4 text-sm focus:ring-2 focus:ring-red-200"
+          className="w-full rounded-xl border border-transparent bg-[#F4F4F5] py-3 pr-10 pl-4 text-sm text-gray-900 focus:ring-2 focus:ring-red-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500"
         />
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -151,7 +149,7 @@ const DesktopSidebar = () => {
 
       {/* Blood Group Grid */}
       <div>
-        <h3 className="mb-3 text-[10px] font-bold tracking-widest text-gray-400 uppercase">
+        <h3 className="mb-3 text-[10px] font-bold tracking-widest text-gray-400 dark:text-slate-400 uppercase">
           Blood Group
         </h3>
         <div className="grid grid-cols-4 gap-2">
@@ -159,7 +157,11 @@ const DesktopSidebar = () => {
             <button
               key={bg}
               onClick={() => setActiveGroup(bg)}
-              className={`rounded-lg py-2 text-sm font-bold transition-colors ${activeGroup === bg ? 'bg-[#D32F2F] text-white shadow-md shadow-red-500/30' : 'bg-[#F4F4F5] text-gray-600 hover:bg-gray-200'}`}
+              className={`rounded-lg py-2 text-sm font-bold transition-colors ${
+                activeGroup === bg
+                  ? 'bg-[#D32F2F] text-white shadow-md shadow-red-500/30'
+                  : 'bg-[#F4F4F5] text-gray-600 hover:bg-gray-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
+              }`}
             >
               {bg}
             </button>
@@ -169,7 +171,7 @@ const DesktopSidebar = () => {
 
       {/* Urgency Checkboxes */}
       <div>
-        <h3 className="mb-3 text-[10px] font-bold tracking-widest text-gray-400 uppercase">
+        <h3 className="mb-3 text-[10px] font-bold tracking-widest text-gray-400 dark:text-slate-400 uppercase">
           Urgency Level
         </h3>
         <div className="space-y-3">
@@ -181,9 +183,9 @@ const DesktopSidebar = () => {
               >
                 <input
                   type="checkbox"
-                  className="h-4 w-4 rounded border-gray-300 text-[#D32F2F] focus:ring-[#D32F2F]"
+                  className="h-4 w-4 rounded border-gray-300 text-[#D32F2F] focus:ring-[#D32F2F] dark:border-slate-700 dark:bg-slate-800"
                 />
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-gray-700 dark:text-slate-300">
                   {level}
                 </span>
               </label>
@@ -193,18 +195,18 @@ const DesktopSidebar = () => {
       </div>
 
       {/* Info Widget */}
-      <div className="rounded-2xl border border-teal-100 bg-[#E0F2F1] p-5">
+      <div className="rounded-2xl border border-teal-100 bg-[#E0F2F1] p-5 dark:border-teal-900/40 dark:bg-teal-950/30">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="currentColor"
-          className="mb-2 h-6 w-6 text-[#006064]"
+          className="mb-2 h-6 w-6 text-[#006064] dark:text-teal-400"
         >
           <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
         </svg>
-        <h4 className="mb-1 text-sm font-bold text-[#006064]">Did you know?</h4>
-        <p className="text-xs leading-relaxed text-[#006064]/80">
-          One donation can save up to three lives. Your O- blood is currently in
+        <h4 className="mb-1 text-sm font-bold text-[#006064] dark:text-teal-300">Did you know?</h4>
+        <p className="text-xs leading-relaxed text-[#006064]/80 dark:text-teal-200/80">
+          One donation can save up to three lives. Your blood is currently in
           critical demand nationwide.
         </p>
       </div>
@@ -213,11 +215,10 @@ const DesktopSidebar = () => {
 };
 
 // ==========================================
-// 3. CARD COMPONENTS (With Dynamic UI Logic)
+// 3. CARD COMPONENTS
 // ==========================================
 
 const RequestCard = ({ req }) => {
-  // 1. Dynamic Button Logic based on Urgency
   const getButtonConfig = (urgency) => {
     switch (urgency.toUpperCase()) {
       case 'CRITICAL':
@@ -234,37 +235,44 @@ const RequestCard = ({ req }) => {
 
   const buttonConfig = getButtonConfig(req.urgency);
 
-  // 2. Visual Theme Mapping
   const borderColors = {
     red: 'border-l-[#D32F2F]',
     orange: 'border-l-orange-400',
     blue: 'border-l-[#0284C7]',
   };
   const badgeColors = {
-    red: 'bg-red-100 text-[#D32F2F]',
-    orange: 'bg-orange-100 text-orange-800',
-    blue: 'bg-blue-100 text-[#0284C7]',
+    red: 'bg-red-100 text-[#D32F2F] dark:bg-red-950/60 dark:text-red-400',
+    orange: 'bg-orange-100 text-orange-800 dark:bg-orange-950/60 dark:text-orange-300',
+    blue: 'bg-blue-100 text-[#0284C7] dark:bg-blue-950/60 dark:text-blue-300',
   };
 
   return (
     <div
-      className={`flex flex-col justify-between rounded-2xl border border-l-[6px] border-gray-50 bg-white p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)] md:p-6 ${borderColors[req.urgencyColor] || 'border-l-gray-300'}`}
+      className={`flex flex-col justify-between rounded-2xl border border-l-[6px] border-gray-100 bg-white p-5 shadow-xs md:p-6 dark:border-slate-800 dark:bg-slate-900 ${
+        borderColors[req.urgencyColor] || 'border-l-gray-300'
+      }`}
     >
       {/* Top Row: Badge & Time */}
       <div className="mb-4 flex items-start justify-between">
         <span
-          className={`rounded-md px-2.5 py-1 text-[10px] font-bold tracking-wider uppercase md:text-xs ${badgeColors[req.urgencyColor] || 'bg-gray-100'}`}
+          className={`rounded-md px-2.5 py-1 text-[10px] font-bold tracking-wider uppercase md:text-xs ${
+            badgeColors[req.urgencyColor] || 'bg-gray-100 dark:bg-slate-800 dark:text-slate-300'
+          }`}
         >
           {req.urgency === 'CRITICAL' && <span className="mr-1">☼</span>}
           {req.urgency}
         </span>
-        <span className="text-xs font-medium text-gray-400">{req.timeAgo}</span>
+        <span className="text-xs font-medium text-gray-400 dark:text-slate-500">{req.timeAgo}</span>
       </div>
 
       {/* Middle Row: Blood Box & Patient Info */}
       <div className="mb-4 flex items-center gap-4">
         <div
-          className={`flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl md:h-16 md:w-16 ${req.urgencyColor === 'red' ? 'bg-[#D32F2F] text-white shadow-md' : 'bg-[#F4F4F5] text-gray-800'}`}
+          className={`flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl md:h-16 md:w-16 ${
+            req.urgencyColor === 'red'
+              ? 'bg-[#D32F2F] text-white shadow-md'
+              : 'bg-[#F4F4F5] text-gray-800 dark:bg-slate-800 dark:text-slate-100'
+          }`}
         >
           <span className="text-xl leading-none font-extrabold md:text-2xl">
             {req.bloodType}
@@ -277,10 +285,10 @@ const RequestCard = ({ req }) => {
         </div>
 
         <div>
-          <h3 className="text-lg leading-tight font-bold text-gray-900 md:text-xl">
+          <h3 className="text-lg leading-tight font-bold text-gray-900 md:text-xl dark:text-white">
             {req.patientName}
           </h3>
-          <p className="mt-1 flex items-center gap-1 text-xs text-gray-500 md:text-sm">
+          <p className="mt-1 flex items-center gap-1 text-xs text-gray-500 md:text-sm dark:text-slate-400">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -299,14 +307,14 @@ const RequestCard = ({ req }) => {
       </div>
 
       {/* Description */}
-      <p className="mb-6 line-clamp-3 flex-1 text-sm leading-relaxed text-gray-600 md:line-clamp-none">
+      <p className="mb-6 line-clamp-3 flex-1 text-sm leading-relaxed text-gray-600 md:line-clamp-none dark:text-slate-300">
         {req.description}
       </p>
 
       {/* Dynamic Button Rendering */}
-      <div className="flex items-center justify-between border-t border-gray-100 pt-4">
+      <div className="flex items-center justify-between border-t border-gray-100 pt-4 dark:border-slate-800">
         {buttonConfig.theme === 'red' ? (
-          <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#D32F2F] py-3.5 text-sm font-bold text-white shadow-lg shadow-red-900/20 transition-colors hover:bg-red-800">
+          <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 py-3.5 text-sm font-bold text-white shadow-md shadow-red-500/25 transition-all hover:brightness-110">
             {buttonConfig.text}
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -322,7 +330,7 @@ const RequestCard = ({ req }) => {
             </svg>
           </button>
         ) : (
-          <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-200 py-3.5 text-sm font-bold text-gray-800 transition-colors hover:bg-gray-300">
+          <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-100 py-3.5 text-sm font-bold text-gray-800 transition-colors hover:bg-gray-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
             {buttonConfig.text}
             {buttonConfig.icon && (
               <svg
@@ -346,11 +354,8 @@ const RequestCard = ({ req }) => {
   );
 };
 
-// ... SpecialRequestCard and Main component remain identical
-// but SpecialRequestCard also derives its button inside the component.
-
 const SpecialRequestCard = ({ req }) => (
-  <div className="flex flex-col justify-between rounded-2xl bg-[#231F20] p-6 shadow-2xl md:p-8">
+  <div className="flex flex-col justify-between rounded-2xl bg-[#1e293b] p-6 shadow-xl border border-slate-700/60 md:p-8">
     <div>
       <div className="mb-6 flex items-start justify-between">
         <span className="rounded-md bg-[#D32F2F] px-3 py-1.5 text-[10px] font-bold tracking-wider text-white uppercase md:text-xs">
@@ -370,7 +375,7 @@ const SpecialRequestCard = ({ req }) => (
     </div>
 
     <div>
-      <div className="mb-4 flex items-center gap-3 rounded-xl border border-gray-700 bg-[#332F30] px-4 py-3">
+      <div className="mb-4 flex items-center gap-3 rounded-xl border border-slate-700 bg-slate-800/80 px-4 py-3">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -388,8 +393,7 @@ const SpecialRequestCard = ({ req }) => (
           Emergency Hotline: {req.hotline}
         </span>
       </div>
-      <button className="w-full rounded-xl bg-white py-3.5 text-sm font-extrabold tracking-widest text-[#D32F2F] transition-colors hover:bg-gray-100">
-        {/* Derive special button text here */}
+      <button className="w-full rounded-xl bg-white py-3.5 text-sm font-extrabold tracking-widest text-[#D32F2F] transition-all hover:bg-gray-100 active:scale-95">
         INQUIRE NOW
       </button>
     </div>
@@ -397,11 +401,11 @@ const SpecialRequestCard = ({ req }) => (
 );
 
 // ==========================================
-// 4. PARENT PAGE COMPONENT
+// 4. PARENT COMPONENT
 // ==========================================
 export default function DonateNow() {
   return (
-    <div className="min-h-screen bg-[#F9FAFB] pb-10 font-sans">
+    <div className="min-h-screen bg-[#F9FAFB] pb-10 font-sans transition-colors duration-300 dark:bg-[#090d16] dark:text-slate-100">
       <MobileHeader />
       <MobileFilters />
 
@@ -411,10 +415,10 @@ export default function DonateNow() {
 
           <div className="flex-1">
             <div className="mb-8 hidden items-baseline justify-between lg:flex">
-              <h1 className="text-4xl font-extrabold text-gray-900">
+              <h1 className="text-4xl font-black text-gray-900 dark:text-white">
                 Urgent Donation Requests
               </h1>
-              <p className="text-sm font-medium text-gray-500">
+              <p className="text-sm font-medium text-gray-500 dark:text-slate-400">
                 Showing 12 active requests in your area
               </p>
             </div>
@@ -430,7 +434,7 @@ export default function DonateNow() {
             </div>
 
             <div className="mt-8 flex justify-center">
-              <button className="flex items-center gap-2 rounded-full bg-gray-200 px-6 py-3 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-300">
+              <button className="flex items-center gap-2 rounded-full border border-gray-200 bg-white px-6 py-3 text-sm font-bold text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
                 Load More Requests
               </button>
             </div>

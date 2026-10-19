@@ -47,46 +47,38 @@ const StoryCard = ({
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         style={style}
-        className="group relative flex h-full cursor-crosshair flex-col justify-center overflow-hidden rounded-[2rem] border border-red-500/30 bg-gradient-to-br from-[#c81e1e] via-[#a81919] to-[#800f0f] p-10 text-white"
+        className="group relative flex h-full cursor-crosshair flex-col items-center justify-center overflow-hidden rounded-[2rem] border border-gray-200/80 bg-white/80 p-8 text-center shadow-xl backdrop-blur-2xl dark:border-white/10 dark:bg-[#141620]/90"
       >
-        <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/20 blur-3xl transition-colors duration-500 group-hover:bg-white/30"></div>
-        <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-black/20 blur-3xl"></div>
+        {/* Ambient Red Glow */}
+        <div className="pointer-events-none absolute -top-12 -right-12 h-36 w-36 rounded-full bg-red-500/20 blur-3xl"></div>
 
-        {/* Animated ECG inside Metric Card */}
-        <svg
-          className="pointer-events-none absolute inset-0 h-full w-full opacity-20"
-          preserveAspectRatio="none"
-        >
-          <path
-            d="M 0 150 L 100 150 L 120 100 L 150 250 L 180 120 L 200 150 L 400 150"
-            stroke="white"
-            strokeWidth="4"
+        {/* Stopwatch Icon */}
+        <div className="relative z-10 mb-3 flex h-12 w-12 items-center justify-center rounded-2xl border border-red-500/20 bg-red-500/10 text-red-500 dark:text-red-400">
+          <svg
+            width="22"
+            height="22"
             fill="none"
-            className="animate-ecg"
-          />
-        </svg>
+            stroke="currentColor"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+          >
+            <circle cx="12" cy="13" r="8" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4l2.5 2.5M12 2v3M9 2h6" />
+          </svg>
+        </div>
 
-        <svg
-          width="32"
-          height="32"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          className="animate-realistic-heartbeat relative z-10 mb-6 text-red-200"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M13 10V3L4 14h7v7l9-11h-7z"
-          ></path>
-        </svg>
-        <h3 className="relative z-10 mb-4 text-6xl font-black tracking-tighter drop-shadow-2xl lg:text-7xl">
+        <h3 className="relative z-10 mb-2 text-6xl font-black tracking-tight text-gray-900 drop-shadow-sm dark:text-white lg:text-7xl">
           {metricValue}
         </h3>
-        <p className="relative z-10 text-lg leading-relaxed font-medium text-red-100">
+        <p className="relative z-10 mb-5 max-w-xs text-xs font-medium text-gray-500 dark:text-gray-400 leading-relaxed">
           {metricLabel}
         </p>
+
+        {/* Efficiency Badge */}
+        <div className="relative z-10 inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-gray-50 px-3 py-1 font-mono text-[10px] font-bold text-gray-700 uppercase dark:border-white/10 dark:bg-white/5 dark:text-gray-300">
+          <span className="h-1.5 w-1.5 rounded-full bg-red-500"></span>
+          94.7% RESPONSE EFFICIENCY
+        </div>
       </div>
     );
   }
@@ -97,32 +89,30 @@ const StoryCard = ({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={style}
-      className="group relative flex h-full cursor-crosshair flex-col justify-between overflow-hidden rounded-[2rem] border border-white bg-white/60 p-10 shadow-xl backdrop-blur-2xl"
+      className="group relative flex h-full cursor-crosshair flex-col justify-between overflow-hidden rounded-[2rem] border border-gray-200/80 bg-white/80 p-8 shadow-xl backdrop-blur-2xl dark:border-white/10 dark:bg-[#12141C]/90"
     >
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-red-50/50 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
       <div className="relative z-10">
-        <div className="mb-6 flex text-xl tracking-widest text-[#166534] drop-shadow-sm">
+        <div className="mb-4 flex text-base tracking-widest text-amber-500 dark:text-amber-400">
           ★★★★★
         </div>
-        <p className="mb-8 text-lg leading-relaxed font-medium text-gray-800 italic">
+        <p className="text-xs leading-relaxed font-normal text-gray-700 dark:text-gray-300 italic">
           "{quote}"
         </p>
       </div>
-      <div className="relative z-10 flex items-center gap-4">
+      <div className="relative z-10 mt-6 flex items-center gap-3.5 border-t border-gray-100 dark:border-white/5 pt-4">
         <div className="relative">
-          <div className="absolute inset-0 rounded-full bg-red-400 opacity-0 blur-md transition-opacity duration-300 group-hover:opacity-40"></div>
           <img
-            src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`}
+            src={`https://images.unsplash.com/photo-${name.includes('Marcus') ? '1500648767791-00dcc994a43e' : '1494790108377-be9c29b29330'}?auto=format&fit=crop&w=120&q=80`}
             alt={name}
-            className="relative h-14 w-14 rounded-full bg-white shadow-md ring-4 ring-gray-50"
+            className="h-11 w-11 rounded-full object-cover ring-2 ring-gray-100 dark:ring-white/10"
           />
         </div>
         <div>
-          <h5 className="text-lg font-bold text-gray-900 transition-colors group-hover:text-[#c81e1e]">
+          <h5 className="text-sm font-bold text-gray-900 dark:text-white">
             {name}
           </h5>
-          <p className="text-xs font-bold tracking-wider text-[#c81e1e] uppercase">
-            {role}
+          <p className="text-[10px] font-bold tracking-wider text-gray-500 dark:text-gray-400 uppercase">
+            {role.replace('O- ', '')}
           </p>
         </div>
       </div>

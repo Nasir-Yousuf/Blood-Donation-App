@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import api from '../../api/axiosInstance';
 import { setCredentials } from '../../store/slices/authSlice';
+import { useLanguage } from '../../context/LanguageContext';
 
 // ==========================================
 // 1. DESKTOP HERO COMPONENT
@@ -39,6 +40,7 @@ const DesktopHero = () => (
 // 2. MAIN LOGIN COMPONENT
 // ==========================================
 export default function Login() {
+  const { t } = useLanguage();
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -76,11 +78,11 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#F8F9FA] font-sans lg:items-center lg:justify-center">
-      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-6 py-5 shadow-sm lg:hidden">
+    <div className="flex min-h-screen flex-col bg-[#F8F9FA] font-sans lg:items-center lg:justify-center dark:bg-[#090d16] dark:text-gray-100 transition-colors">
+      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-6 py-5 shadow-sm lg:hidden dark:border-slate-800 dark:bg-slate-900">
         <Link
           href="/"
-          className="text-gray-600 transition-colors hover:text-gray-900"
+          className="text-gray-600 transition-colors hover:text-gray-900 dark:text-slate-300 dark:hover:text-white"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -97,18 +99,18 @@ export default function Login() {
             />
           </svg>
         </Link>
-        <h1 className="text-base font-bold text-gray-900">Login</h1>
+        <h1 className="text-base font-bold text-gray-900 dark:text-white">{t('navLogin', 'Login')}</h1>
         <span className="text-sm font-extrabold text-[#D32F2F]">
-          Clinical Vitality
+          {t('brandName', 'Clinical Vitality')}
         </span>
       </div>
 
-      <div className="mx-auto flex w-full max-w-[1000px] flex-1 flex-col overflow-hidden bg-[#F8F9FA] lg:my-10 lg:flex-row lg:rounded-[40px] lg:bg-white lg:shadow-2xl">
+      <div className="mx-auto flex w-full max-w-[1000px] flex-1 flex-col overflow-hidden bg-[#F8F9FA] lg:my-10 lg:flex-row lg:rounded-[40px] lg:bg-white lg:shadow-2xl dark:bg-[#090d16] lg:dark:bg-slate-900 dark:border dark:border-slate-800">
         <DesktopHero />
 
         <div className="flex flex-1 flex-col p-6 lg:justify-center lg:p-14">
           <div className="mt-4 mb-8 flex flex-col items-center text-center lg:hidden">
-            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-red-100 bg-red-50 shadow-sm">
+            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-red-100 bg-red-50 shadow-sm dark:border-red-950/60 dark:bg-red-950/40">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -118,33 +120,33 @@ export default function Login() {
                 <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
               </svg>
             </div>
-            <h2 className="mb-1 text-2xl font-extrabold text-gray-900">
-              Welcome Back
+            <h2 className="mb-1 text-2xl font-extrabold text-gray-900 dark:text-white">
+              {t('welcomeBack', 'Welcome Back')}
             </h2>
-            <p className="text-sm text-gray-500">
-              Log in to continue your journey.
+            <p className="text-sm text-gray-500 dark:text-slate-400">
+              {t('loginSubtitle', 'Log in to continue your journey.')}
             </p>
           </div>
 
-          <div className="mx-auto w-full max-w-[400px] rounded-[32px] border border-gray-50 bg-white p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] lg:mx-0 lg:border-none lg:bg-transparent lg:p-0 lg:shadow-none">
+          <div className="mx-auto w-full max-w-[400px] rounded-[32px] border border-gray-50 bg-white p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] lg:mx-0 lg:border-none lg:bg-transparent lg:p-0 lg:shadow-none dark:border-slate-800 dark:bg-slate-900 lg:dark:bg-transparent">
             <div className="mb-8 hidden lg:block">
-              <h2 className="mb-2 text-3xl font-extrabold tracking-tight text-gray-900">
-                Sign In
+              <h2 className="mb-2 text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+                {t('loginBtn', 'Sign In')}
               </h2>
-              <p className="text-sm text-gray-500">
-                Enter your details to access your dashboard.
+              <p className="text-sm text-gray-500 dark:text-slate-400">
+                {t('loginSubtitle', 'Enter your details to access your dashboard.')}
               </p>
             </div>
 
             {errorMessage && (
-              <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-3 text-center text-sm font-medium text-red-600">
+              <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-3 text-center text-sm font-medium text-red-600 dark:border-red-900 dark:bg-red-950/50 dark:text-red-300">
                 {errorMessage}
               </div>
             )}
 
             <form onSubmit={handleLogin}>
               <div className="mb-5">
-                <label className="mb-2 block text-[11px] font-bold tracking-widest text-gray-500 uppercase">
+                <label className="mb-2 block text-[11px] font-bold tracking-widest text-gray-500 uppercase dark:text-slate-400">
                   Email Address
                 </label>
                 <div className="relative">
@@ -152,10 +154,10 @@ export default function Login() {
                     type="email"
                     name="email"
                     placeholder="name@example.com"
-                    className="w-full rounded-2xl border-none bg-[#F4F4F5] py-4 pr-4 pl-12 text-sm text-gray-900 transition-all outline-none focus:ring-2 focus:ring-[#D32F2F]/20"
+                    className="w-full rounded-2xl border border-transparent bg-[#F4F4F5] py-4 pr-4 pl-12 text-sm text-gray-900 transition-all outline-none focus:ring-2 focus:ring-[#D32F2F]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500"
                     required
                   />
-                  <div className="absolute top-1/2 left-4 -translate-y-1/2 text-gray-400">
+                  <div className="absolute top-1/2 left-4 -translate-y-1/2 text-gray-400 dark:text-slate-400">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 20 20"
@@ -170,12 +172,12 @@ export default function Login() {
 
               <div className="mb-6">
                 <div className="mb-2 flex items-center justify-between">
-                  <label className="block text-[11px] font-bold tracking-widest text-gray-500 uppercase">
+                  <label className="block text-[11px] font-bold tracking-widest text-gray-500 uppercase dark:text-slate-400">
                     Password
                   </label>
                   <Link
                     href="/forgot-password"
-                    className="text-[11px] font-bold text-[#006064] transition-colors hover:text-teal-800"
+                    className="text-[11px] font-bold text-[#006064] transition-colors hover:text-teal-800 dark:text-cyan-400 dark:hover:text-cyan-300"
                   >
                     Forgot Password?
                   </Link>
@@ -185,10 +187,10 @@ export default function Login() {
                     type={showPassword ? 'text' : 'password'}
                     name="password"
                     placeholder="••••••••"
-                    className="w-full rounded-2xl border-none bg-[#F4F4F5] py-4 pr-12 pl-12 text-sm tracking-widest text-gray-900 transition-all outline-none placeholder:tracking-normal focus:ring-2 focus:ring-[#D32F2F]/20"
+                    className="w-full rounded-2xl border border-transparent bg-[#F4F4F5] py-4 pr-12 pl-12 text-sm tracking-widest text-gray-900 transition-all outline-none placeholder:tracking-normal focus:ring-2 focus:ring-[#D32F2F]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500"
                     required
                   />
-                  <div className="absolute top-1/2 left-4 -translate-y-1/2 text-gray-400">
+                  <div className="absolute top-1/2 left-4 -translate-y-1/2 text-gray-400 dark:text-slate-400">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 20 20"
@@ -205,7 +207,7 @@ export default function Login() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute top-1/2 right-4 -translate-y-1/2 text-gray-400 outline-none hover:text-gray-600"
+                    className="absolute top-1/2 right-4 -translate-y-1/2 text-gray-400 outline-none hover:text-gray-600 dark:text-slate-400 dark:hover:text-slate-200"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -261,9 +263,9 @@ export default function Login() {
 
             <div className="relative mb-6 flex items-center justify-center">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200"></div>
+                <div className="w-full border-t border-gray-200 dark:border-slate-800"></div>
               </div>
-              <div className="relative bg-white px-4 text-[10px] font-bold tracking-widest text-gray-400 uppercase lg:bg-[#F8F9FA]">
+              <div className="relative bg-white px-4 text-[10px] font-bold tracking-widest text-gray-400 uppercase lg:bg-[#F8F9FA] dark:bg-slate-900 lg:dark:bg-slate-900 dark:text-slate-500">
                 Or continue with
               </div>
             </div>
@@ -272,7 +274,7 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => alert('Google Login coming soon!')}
-                className="flex flex-1 items-center justify-center gap-3 rounded-2xl bg-[#F4F4F5] py-3.5 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-200"
+                className="flex flex-1 items-center justify-center gap-3 rounded-2xl bg-[#F4F4F5] py-3.5 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24">
                   <path
@@ -298,7 +300,7 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => alert('Apple Login coming soon!')}
-                className="hidden flex-1 items-center justify-center gap-3 rounded-2xl bg-[#F4F4F5] py-3.5 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-200 lg:flex"
+                className="hidden flex-1 items-center justify-center gap-3 rounded-2xl bg-[#F4F4F5] py-3.5 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-200 lg:flex dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
               >
                 <svg
                   className="h-5 w-5"
@@ -311,12 +313,12 @@ export default function Login() {
               </button>
             </div>
 
-            <div className="border-t border-gray-100 pt-6 text-center">
-              <p className="text-sm font-medium text-gray-600">
+            <div className="border-t border-gray-100 dark:border-slate-800 pt-6 text-center">
+              <p className="text-sm font-medium text-gray-600 dark:text-slate-400">
                 First time donating?{' '}
                 <Link
                   href="/registration"
-                  className="rounded-sm px-1 font-bold text-[#D32F2F] transition-colors outline-none hover:text-[#B71C1C] hover:underline focus:ring-2 focus:ring-[#D32F2F]"
+                  className="rounded-sm px-1 font-bold text-[#D32F2F] transition-colors outline-none hover:text-[#B71C1C] hover:underline focus:ring-2 focus:ring-[#D32F2F] dark:text-red-400 dark:hover:text-red-300"
                 >
                   Create an account
                 </Link>

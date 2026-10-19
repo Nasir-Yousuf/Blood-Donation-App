@@ -60,13 +60,13 @@ export default function Profile() {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-80px)] bg-[#F8F9FA] font-sans text-gray-900">
+    <div className="flex min-h-[calc(100vh-80px)] bg-[#F8F9FA] font-sans text-gray-900 dark:bg-[#090d16] dark:text-slate-100 transition-colors">
       {/* LEFT SIDEBAR (Desktop) */}
-      <aside className="sticky top-0 z-20 hidden h-screen w-[240px] shrink-0 flex-col border-r border-gray-100 bg-white py-8 lg:flex">
+      <aside className="sticky top-0 z-20 hidden h-screen w-[240px] shrink-0 flex-col border-r border-gray-100 bg-white py-8 lg:flex dark:border-slate-800 dark:bg-slate-900">
         <nav className="mt-4 flex flex-1 flex-col gap-2">
           <Link
             href="/dashboard"
-            className="mr-4 flex items-center gap-3 rounded-r-full border-l-4 border-transparent px-6 py-3.5 font-bold text-gray-500 transition-all hover:bg-gray-50 hover:text-gray-900"
+            className="mr-4 flex items-center gap-3 rounded-r-full border-l-4 border-transparent px-6 py-3.5 font-bold text-gray-500 transition-all hover:bg-gray-50 hover:text-gray-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
           >
             <svg
               className="h-5 w-5"
@@ -85,7 +85,7 @@ export default function Profile() {
           </Link>
           <Link
             href="/profile"
-            className="mr-4 flex items-center gap-3 rounded-r-full border-l-4 border-[#D32F2F] bg-red-50/50 px-6 py-3.5 font-bold text-[#D32F2F] transition-all"
+            className="mr-4 flex items-center gap-3 rounded-r-full border-l-4 border-[#D32F2F] bg-red-50/50 px-6 py-3.5 font-bold text-[#D32F2F] transition-all dark:border-red-500 dark:bg-red-950/40 dark:text-red-400"
           >
             <svg
               className="h-5 w-5"
@@ -113,20 +113,20 @@ export default function Profile() {
             <img
               src={`https://ui-avatars.com/api/?name=${user.name}&background=D32F2F&color=fff`}
               alt={user.name}
-              className="h-24 w-24 rounded-full border-4 border-white shadow-md"
+              className="h-24 w-24 rounded-full border-4 border-white shadow-md dark:border-slate-800"
             />
           </div>
-          <h2 className="text-2xl font-extrabold text-gray-900">{user.name}</h2>
-          <p className="mt-1 text-xs font-bold tracking-widest text-gray-400 uppercase">
+          <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white">{user.name}</h2>
+          <p className="mt-1 text-xs font-bold tracking-widest text-gray-400 uppercase dark:text-slate-500">
             Member since 2026
           </p>
         </div>
 
         <div className="mb-8 hidden lg:block">
-          <h1 className="mb-2 text-3xl font-extrabold tracking-tight text-gray-900">
+          <h1 className="mb-2 text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">
             Personal Information
           </h1>
-          <p className="max-w-2xl text-sm text-gray-500">
+          <p className="max-w-2xl text-sm text-gray-500 dark:text-slate-400">
             Keep your vital data current. Accurate records ensure you're always
             ready to save a life when the pulse calls.
           </p>
@@ -134,12 +134,12 @@ export default function Profile() {
 
         {/* Global Action Messages */}
         {actionData?.success && (
-          <div className="mb-6 rounded-2xl border border-green-100 bg-green-50 p-4 text-center text-sm font-bold text-green-700">
+          <div className="mb-6 rounded-2xl border border-green-100 bg-green-50 p-4 text-center text-sm font-bold text-green-700 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-400">
             {actionData.message}
           </div>
         )}
         {actionData?.error && (
-          <div className="mb-6 rounded-2xl border border-red-100 bg-red-50 p-4 text-center text-sm font-bold text-red-700">
+          <div className="mb-6 rounded-2xl border border-red-100 bg-red-50 p-4 text-center text-sm font-bold text-red-700 dark:border-red-900 dark:bg-red-950/60 dark:text-red-400">
             {actionData.message}
           </div>
         )}
@@ -149,20 +149,20 @@ export default function Profile() {
           <div className="flex flex-[2] flex-col gap-6">
             <form
               onSubmit={handleUpdateProfile}
-              className="flex h-full flex-col rounded-[32px] border border-gray-100 bg-white p-6 shadow-sm lg:p-8"
+              className="flex h-full flex-col rounded-[32px] border border-gray-100 bg-white p-6 shadow-sm lg:p-8 dark:border-slate-800 dark:bg-slate-900"
             >
               <div className="mb-6 flex items-center justify-between">
-                <h3 className="border-l-4 border-[#D32F2F] pl-3 text-lg font-extrabold text-gray-900 lg:border-none lg:pl-0">
+                <h3 className="border-l-4 border-[#D32F2F] pl-3 text-lg font-extrabold text-gray-900 lg:border-none lg:pl-0 dark:text-white">
                   Account Details
                 </h3>
-                <span className="hidden text-xs font-bold text-[#D32F2F] lg:block">
+                <span className="hidden text-xs font-bold text-[#D32F2F] lg:block dark:text-red-400">
                   Edit Profile
                 </span>
               </div>
 
               <div className="mb-6 grid grid-cols-1 gap-5 lg:grid-cols-2">
                 <div>
-                  <label className="mb-2 block text-[11px] font-bold tracking-widest text-gray-500 uppercase">
+                  <label className="mb-2 block text-[11px] font-bold tracking-widest text-gray-500 uppercase dark:text-slate-400">
                     Full Name
                   </label>
                   <input
@@ -170,11 +170,11 @@ export default function Profile() {
                     name="name"
                     defaultValue={user.name}
                     required
-                    className="w-full rounded-2xl border-none bg-[#F4F4F5] px-5 py-4 text-sm font-medium text-gray-900 transition-all outline-none focus:ring-2 focus:ring-[#D32F2F]/20"
+                    className="w-full rounded-2xl border border-transparent bg-[#F4F4F5] px-5 py-4 text-sm font-medium text-gray-900 transition-all outline-none focus:ring-2 focus:ring-[#D32F2F]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-[11px] font-bold tracking-widest text-gray-500 uppercase">
+                  <label className="mb-2 block text-[11px] font-bold tracking-widest text-gray-500 uppercase dark:text-slate-400">
                     Email Address
                   </label>
                   <input
@@ -182,11 +182,11 @@ export default function Profile() {
                     name="email"
                     defaultValue={user.email}
                     required
-                    className="w-full rounded-2xl border-none bg-[#F4F4F5] px-5 py-4 text-sm font-medium text-gray-900 transition-all outline-none focus:ring-2 focus:ring-[#D32F2F]/20"
+                    className="w-full rounded-2xl border border-transparent bg-[#F4F4F5] px-5 py-4 text-sm font-medium text-gray-900 transition-all outline-none focus:ring-2 focus:ring-[#D32F2F]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-[11px] font-bold tracking-widest text-gray-500 uppercase">
+                  <label className="mb-2 block text-[11px] font-bold tracking-widest text-gray-500 uppercase dark:text-slate-400">
                     Mobile Number
                   </label>
                   <input
@@ -194,13 +194,13 @@ export default function Profile() {
                     name="mobileNumber"
                     defaultValue={user.mobileNumber}
                     required
-                    className="w-full rounded-2xl border-none bg-[#F4F4F5] px-5 py-4 text-sm font-medium text-gray-900 transition-all outline-none focus:ring-2 focus:ring-[#D32F2F]/20"
+                    className="w-full rounded-2xl border border-transparent bg-[#F4F4F5] px-5 py-4 text-sm font-medium text-gray-900 transition-all outline-none focus:ring-2 focus:ring-[#D32F2F]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                   />
                 </div>
 
                 {/* Gender Toggles */}
                 <div>
-                  <label className="mb-2 block text-[11px] font-bold tracking-widest text-gray-500 uppercase">
+                  <label className="mb-2 block text-[11px] font-bold tracking-widest text-gray-500 uppercase dark:text-slate-400">
                     Gender
                   </label>
                   <input type="hidden" name="gender" value={selectedGender} />
@@ -210,7 +210,7 @@ export default function Profile() {
                         key={g}
                         type="button"
                         onClick={() => setSelectedGender(g)}
-                        className={`flex-1 rounded-2xl border py-4 text-sm font-bold capitalize transition-all ${selectedGender === g ? 'border-red-200 bg-red-50 text-[#D32F2F]' : 'border-transparent bg-[#F4F4F5] text-gray-600 hover:bg-gray-200'}`}
+                        className={`flex-1 rounded-2xl border py-4 text-sm font-bold capitalize transition-all ${selectedGender === g ? 'border-red-200 bg-red-50 text-[#D32F2F] dark:border-red-900 dark:bg-red-950/60 dark:text-red-400' : 'border-transparent bg-[#F4F4F5] text-gray-600 hover:bg-gray-200 dark:border-transparent dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'}`}
                       >
                         {g}
                       </button>
@@ -220,11 +220,11 @@ export default function Profile() {
               </div>
 
               {/* Action Buttons */}
-              <div className="mt-auto flex flex-col justify-end gap-3 border-t border-gray-50 pt-6 lg:flex-row">
+              <div className="mt-auto flex flex-col justify-end gap-3 border-t border-gray-50 pt-6 lg:flex-row dark:border-slate-800">
                 <Link href="/">
                   <button
                     type="button"
-                    className="px-6 py-4 text-sm font-bold text-gray-500 transition-colors hover:text-gray-900"
+                    className="px-6 py-4 text-sm font-bold text-gray-500 transition-colors hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
                   >
                     Cancel
                   </button>
@@ -283,12 +283,12 @@ export default function Profile() {
             </div>
 
             {/* Next Eligibility Card */}
-            <div className="relative overflow-hidden rounded-[32px] border border-green-100 bg-white p-6 shadow-sm lg:p-8">
+            <div className="relative overflow-hidden rounded-[32px] border border-green-100 bg-white p-6 shadow-sm lg:p-8 dark:border-slate-800 dark:bg-slate-900">
               <div className="absolute top-0 left-0 h-2 w-full bg-green-500"></div>
-              <p className="mt-2 mb-1 text-[10px] font-bold tracking-widest text-gray-400 uppercase">
+              <p className="mt-2 mb-1 text-[10px] font-bold tracking-widest text-gray-400 uppercase dark:text-slate-500">
                 Next Eligibility
               </p>
-              <h3 className="mb-6 text-2xl font-extrabold text-gray-900">
+              <h3 className="mb-6 text-2xl font-extrabold text-gray-900 dark:text-white">
                 {user.nextAvailableDate
                   ? new Date(user.nextAvailableDate).toLocaleDateString(
                       'en-US',
@@ -298,16 +298,16 @@ export default function Profile() {
               </h3>
 
               <div className="mb-2 flex justify-between text-[10px] font-bold tracking-widest uppercase">
-                <span className="text-green-700">Recovery Progress</span>
-                <span className="text-gray-900">{progress}%</span>
+                <span className="text-green-700 dark:text-green-400">Recovery Progress</span>
+                <span className="text-gray-900 dark:text-white">{progress}%</span>
               </div>
-              <div className="mb-4 h-2.5 w-full overflow-hidden rounded-full bg-gray-100">
+              <div className="mb-4 h-2.5 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-slate-800">
                 <div
                   className="h-2.5 rounded-full bg-green-500 transition-all duration-1000"
                   style={{ width: `${progress}%` }}
                 ></div>
               </div>
-              <p className="text-xs leading-relaxed text-gray-500">
+              <p className="text-xs leading-relaxed text-gray-500 dark:text-slate-400">
                 {progress === 100
                   ? 'You are fully recovered and ready to donate again. Schedule an appointment today!'
                   : 'You are nearly recovered. Stay hydrated and eat iron-rich foods!'}

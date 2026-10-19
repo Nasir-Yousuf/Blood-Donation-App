@@ -1,19 +1,19 @@
 @import 'tailwindcss';
 
-@theme {
-  /* 2. Register the font family */
-  --font-manrope: 'Manrope', sans-serif;
+@custom-variant dark (&:where(.dark, .dark *));
 
-  /* 3. Register your custom "Editorial" sizes */
+@theme {
+  --font-manrope: 'Manrope', sans-serif;
   --font-size-display-lg: 3.5rem;
   --font-size-headline-md: 1.75rem;
 }
 
 @layer components {
   .input {
-    @apply rounded-full border-stone-200 bg-yellow-50 px-4 py-2 text-sm transition-all duration-300 placeholder:text-stone-400 focus:ring focus:ring-yellow-500 md:px-6 md:py-3;
+    @apply rounded-full border-stone-200 bg-yellow-50 px-4 py-2 text-sm transition-all duration-300 placeholder:text-stone-400 focus:ring focus:ring-yellow-500 md:px-6 md:py-3 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500;
   }
 }
+
 @layer components {
   .primaryBg {
     @apply bg-[#D32F2F];
@@ -25,18 +25,68 @@
     @apply bg-[#00799c];
   }
   .neutralBg {
-    @apply bg-[#F5F5F5];
+    @apply bg-[#F5F5F5] dark:bg-[#0f172a];
   }
   .primary {
-    @apply text-[#D32F2F];
+    @apply text-[#D32F2F] dark:text-[#ef4444];
   }
   .secondary {
     @apply text-[#bf574f];
   }
   .tertiary {
-    @apply text-[#00799c];
+    @apply text-[#00799c] dark:text-[#38bdf8];
   }
   .neutral {
     @apply text-[#F5F5F5];
   }
+}
+
+/* ==========================================
+   VITALPULSE HIGH-TECH DARK THEME (OBSIDIAN & NEON CRIMSON)
+   ========================================== */
+html.dark {
+  color-scheme: dark;
+}
+
+html.dark body {
+  background-color: #08090C;
+  color: #f3f4f6;
+}
+
+/* Smooth theme transition */
+body, nav, footer, button, input, select, textarea {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* Dark mode inputs, selects, textareas base styling */
+.dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="submit"]):not([type="button"]),
+.dark select,
+.dark textarea {
+  background-color: #1e293b;
+  color: #f8fafc;
+  border-color: #334155;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #64748b;
+}
+
+/* Smooth customized scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
 }

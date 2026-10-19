@@ -1,26 +1,27 @@
-'use client';
-import React, { useState, useEffect } from 'react';
+"use client";
+import React, { useState, useEffect } from "react";
 // 👇 FIXED: Using your production Axios instance
-import api from '../../api/axiosInstance';
+import api from "../../api/axiosInstance";
+import { useLanguage } from "../../context/LanguageContext";
 
 // ==========================================
 // 1. HELPERS & MATH
 // ==========================================
 const MOCK_BLOOD_GROUPS = [
-  'All',
-  'A+',
-  'A-',
-  'B+',
-  'B-',
-  'O+',
-  'O-',
-  'AB+',
-  'AB-',
+  "All",
+  "A+",
+  "A-",
+  "B+",
+  "B-",
+  "O+",
+  "O-",
+  "AB+",
+  "AB-",
 ];
 
 const formatGroupLabel = (bloodType) => {
-  if (!bloodType) return '';
-  return bloodType.replace('+', ' POS').replace('-', ' NEG');
+  if (!bloodType) return "";
+  return bloodType.replace("+", " POS").replace("-", " NEG");
 };
 
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -40,8 +41,8 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
 
 // HELPER: Get up to 2 initials from a name
 const getInitials = (name) => {
-  if (!name) return '??';
-  const parts = name.trim().split(' ');
+  if (!name) return "??";
+  const parts = name.trim().split(" ");
   if (parts.length >= 2) {
     return (parts[0][0] + parts[1][0]).toUpperCase();
   }
@@ -50,15 +51,15 @@ const getInitials = (name) => {
 
 // HELPER: Format phone numbers for WhatsApp and standard calling
 const formatValidPhone = (phone) => {
-  if (!phone) return '';
-  let cleaned = String(phone).replace(/[^0-9]/g, '');
-  if (cleaned.startsWith('00')) {
+  if (!phone) return "";
+  let cleaned = String(phone).replace(/[^0-9]/g, "");
+  if (cleaned.startsWith("00")) {
     cleaned = cleaned.substring(2);
   }
-  if (cleaned.startsWith('0') && cleaned.length === 11) {
+  if (cleaned.startsWith("0") && cleaned.length === 11) {
     return `88${cleaned}`;
   }
-  if (cleaned.startsWith('880')) {
+  if (cleaned.startsWith("880")) {
     return cleaned;
   }
   return cleaned;
@@ -67,16 +68,22 @@ const formatValidPhone = (phone) => {
 // ==========================================
 // 2. SUB-COMPONENTS
 // ==========================================
-const Header = () => (
-  <div className="mb-6">
-    <h1 className="text-2xl font-extrabold text-gray-900 md:text-3xl">
-      Find Life-Saving Donors
-    </h1>
-    <p className="mt-1 text-sm text-gray-500">
-      Browse available donors in your vicinity and connect instantly.
-    </p>
-  </div>
-);
+const Header = () => {
+  const { t } = useLanguage();
+  return (
+    <div className="mb-6">
+      <h1 className="text-2xl font-extrabold text-gray-900 md:text-3xl dark:text-gray-100">
+        {t("searchTitle", "Find Life-Saving Donors")}
+      </h1>
+      <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        {t(
+          "searchSubtitle",
+          "Browse available donors in your vicinity and connect instantly.",
+        )}
+      </p>
+    </div>
+  );
+};
 
 const MobileFilters = ({
   activeGroup,
@@ -84,44 +91,47 @@ const MobileFilters = ({
   distance,
   setDistance,
   onApply,
-}) => (
-  <div className="mb-6 flex flex-col gap-4 lg:hidden">
-    <div className="scrollbar-hide flex gap-3 overflow-x-auto">
-      {MOCK_BLOOD_GROUPS.map((bg) => (
+}) => {
+  const { t } = useLanguage();
+  return (
+    <div className="mb-6 flex flex-col gap-4 lg:hidden">
+      <div className="scrollbar-hide flex gap-3 overflow-x-auto">
+        {MOCK_BLOOD_GROUPS.map((bg) => (
+          <button
+            key={bg}
+            onClick={() => setActiveGroup(bg)}
+            className={`shrink-0 rounded-full border px-4 py-2 text-sm font-bold ${
+              activeGroup === bg
+                ? "border-red-700 bg-red-700 text-white"
+                : "border-gray-200 bg-gray-100 text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+            }`}
+          >
+            {bg === "All" ? t("anyType", "Any Blood Type") : bg}
+          </button>
+        ))}
+      </div>
+      <div className="flex items-center gap-4 px-1">
+        <span className="shrink-0 text-sm font-bold text-gray-700 dark:text-gray-300">
+          {t("withinKm", "Within")} {distance} km
+        </span>
+        <input
+          type="range"
+          min="1"
+          max="500" // 👇 FIXED: Max is now 500
+          value={distance}
+          onChange={(e) => setDistance(e.target.value)}
+          className="w-full accent-red-700"
+        />
         <button
-          key={bg}
-          onClick={() => setActiveGroup(bg)}
-          className={`shrink-0 rounded-full border px-4 py-2 text-sm font-bold ${
-            activeGroup === bg
-              ? 'border-red-700 bg-red-700 text-white'
-              : 'border-gray-200 bg-gray-100 text-gray-700'
-          }`}
+          onClick={onApply}
+          className="rounded-lg bg-red-700 px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-red-800"
         >
-          {bg === 'All' ? 'Any Blood Type' : bg}
+          {t("searchBtn", "Search")}
         </button>
-      ))}
+      </div>
     </div>
-    <div className="flex items-center gap-4 px-1">
-      <span className="shrink-0 text-sm font-bold text-gray-700">
-        Within {distance} km
-      </span>
-      <input
-        type="range"
-        min="1"
-        max="500" // 👇 FIXED: Max is now 500
-        value={distance}
-        onChange={(e) => setDistance(e.target.value)}
-        className="w-full accent-red-700"
-      />
-      <button
-        onClick={onApply}
-        className="rounded-lg bg-red-700 px-4 py-2 text-sm font-bold text-white"
-      >
-        Search
-      </button>
-    </div>
-  </div>
-);
+  );
+};
 
 const DesktopSidebar = ({
   activeGroup,
@@ -130,13 +140,14 @@ const DesktopSidebar = ({
   setDistance,
   onApply,
 }) => {
+  const { t } = useLanguage();
   return (
     <div className="hidden w-[300px] shrink-0 flex-col gap-6 lg:flex">
-      <div className="rounded-[20px] border border-gray-100 bg-[#F8F9FA] p-6 shadow-sm">
+      <div className="rounded-[20px] border border-gray-100 bg-[#F8F9FA] p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900/80">
         <div className="mb-6 flex items-center gap-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 text-gray-700"
+            className="h-5 w-5 text-gray-700 dark:text-gray-300"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -148,13 +159,15 @@ const DesktopSidebar = ({
               d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
             />
           </svg>
-          <h2 className="font-bold text-gray-900">Search Filters</h2>
+          <h2 className="font-bold text-gray-900 dark:text-gray-100">
+            {t("searchFilters", "Search Filters")}
+          </h2>
         </div>
 
         {/* Blood Group Filter */}
         <div className="mb-6">
-          <p className="mb-3 text-xs font-bold tracking-wider text-gray-500 uppercase">
-            Blood Group
+          <p className="mb-3 text-xs font-bold tracking-wider text-gray-500 uppercase dark:text-gray-400">
+            {t("bloodGroup", "Blood Group")}
           </p>
           <div className="grid grid-cols-4 gap-2">
             {MOCK_BLOOD_GROUPS.map((bg) => (
@@ -163,11 +176,11 @@ const DesktopSidebar = ({
                 onClick={() => setActiveGroup(bg)}
                 className={`rounded-lg border py-2 text-sm font-bold ${
                   activeGroup === bg
-                    ? 'border-red-700 bg-red-700 text-white'
-                    : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
-                } ${bg === 'All' ? 'col-span-4' : ''}`}
+                    ? "border-red-700 bg-red-700 text-white"
+                    : "border-gray-200 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-750"
+                } ${bg === "All" ? "col-span-4" : ""}`}
               >
-                {bg === 'All' ? 'Any Type' : bg}
+                {bg === "All" ? t("anyType", "Any Type") : bg}
               </button>
             ))}
           </div>
@@ -176,10 +189,10 @@ const DesktopSidebar = ({
         {/* Distance Filter */}
         <div className="mb-6">
           <div className="mb-3 flex items-center justify-between">
-            <p className="text-xs font-bold tracking-wider text-gray-500 uppercase">
-              Max Distance
+            <p className="text-xs font-bold tracking-wider text-gray-500 uppercase dark:text-gray-400">
+              {t("maxDistance", "Max Distance")}
             </p>
-            <span className="text-sm font-bold text-red-700">
+            <span className="text-sm font-bold text-red-700 dark:text-red-400">
               {distance} km
             </span>
           </div>
@@ -194,15 +207,15 @@ const DesktopSidebar = ({
           />
           <div className="mt-2 flex justify-between text-xs text-gray-400">
             <span>1 km</span>
-            <span>500 km</span> {/* 👇 FIXED: Label is now 500km */}
+            <span>500 km</span>
           </div>
         </div>
 
         <button
           onClick={onApply}
-          className="w-full rounded-xl bg-red-700 py-3 font-bold text-white transition-colors hover:bg-red-800"
+          className="w-full rounded-xl bg-red-700 py-3 font-bold text-white transition-colors hover:bg-red-800 shadow-sm"
         >
-          Apply Filters
+          {t("searchBtn", "Search")}
         </button>
       </div>
     </div>
@@ -213,9 +226,10 @@ const DesktopSidebar = ({
 // 3. DONOR CARD
 // ==========================================
 const DonorCard = ({ donor, userLocation }) => {
+  const { t } = useLanguage();
   const validPhone = formatValidPhone(donor.phone);
 
-  let mapUrl = '#';
+  let mapUrl = "#";
   if (donor.lat && donor.lng) {
     mapUrl = `https://www.google.com/maps/search/?api=1&query=${donor.lat},${donor.lng}`;
     if (userLocation?.lat && userLocation?.lng) {
@@ -227,29 +241,29 @@ const DonorCard = ({ donor, userLocation }) => {
     userLocation?.lat,
     userLocation?.lng,
     donor.lat,
-    donor.lng
+    donor.lng,
   );
 
   return (
-    <div className="flex flex-col justify-between rounded-2xl border border-gray-50 bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.04)] md:p-5">
+    <div className="flex flex-col justify-between rounded-2xl border border-gray-100 bg-white p-4 shadow-xs md:p-5 dark:border-slate-800 dark:bg-slate-900">
       <div className="flex gap-4">
         <div className="relative shrink-0">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-red-100 text-lg font-bold tracking-wide text-red-700 md:h-16 md:w-16 md:text-xl">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-red-100 text-lg font-bold tracking-wide text-red-700 md:h-16 md:w-16 md:text-xl dark:bg-red-950/60 dark:text-red-400">
             {getInitials(donor.name)}
           </div>
 
           {donor.isOnline && (
-            <span className="absolute right-0 bottom-0 h-4 w-4 rounded-full border-2 border-white bg-green-500"></span>
+            <span className="absolute right-0 bottom-0 h-4 w-4 rounded-full border-2 border-white bg-green-500 dark:border-gray-900"></span>
           )}
         </div>
 
         <div className="flex-1">
           <div className="flex items-start justify-between">
             <div>
-              <h3 className="text-base font-bold text-gray-900 md:text-lg">
+              <h3 className="text-base font-bold text-gray-900 md:text-lg dark:text-gray-100">
                 {donor.name}
               </h3>
-              <div className="mt-1 flex flex-col gap-1 text-xs text-gray-500 md:flex-row md:items-center md:gap-2 md:text-sm">
+              <div className="mt-1 flex flex-col gap-1 text-xs text-gray-500 md:flex-row md:items-center md:gap-2 md:text-sm dark:text-gray-400">
                 <span className="flex items-center gap-1 font-medium">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -272,17 +286,17 @@ const DonorCard = ({ donor, userLocation }) => {
                     />
                   </svg>
                   {exactDistance
-                    ? `${exactDistance} km away`
-                    : 'Distance unknown'}
+                    ? `${exactDistance} ${t("kmAway", "km away")}`
+                    : "Distance unknown"}
                 </span>
               </div>
             </div>
 
-            <div className="flex shrink-0 flex-col items-center justify-center rounded-xl border border-red-100 bg-red-100/60 px-2 py-1 md:px-3 md:py-2">
-              <span className="text-[9px] leading-none font-bold text-red-800 uppercase md:text-[10px]">
+            <div className="flex shrink-0 flex-col items-center justify-center rounded-xl border border-red-100 bg-red-100/60 px-2 py-1 md:px-3 md:py-2 dark:border-red-900/50 dark:bg-red-950/40">
+              <span className="text-[9px] leading-none font-bold text-red-800 uppercase md:text-[10px] dark:text-red-300">
                 {donor.groupLabel}
               </span>
-              <span className="text-sm leading-tight font-extrabold text-red-700 md:text-xl">
+              <span className="text-sm leading-tight font-extrabold text-red-700 md:text-xl dark:text-red-400">
                 {donor.bloodType}
               </span>
             </div>
@@ -293,11 +307,11 @@ const DonorCard = ({ donor, userLocation }) => {
               <span
                 key={idx}
                 className={`rounded-md px-2.5 py-1 text-[10px] font-bold tracking-wide uppercase md:text-xs ${
-                  tag.type === 'blue'
-                    ? 'bg-cyan-100 text-cyan-800'
-                    : tag.type === 'status-blue'
-                      ? 'flex items-center gap-1 bg-cyan-100 text-cyan-800 before:h-1.5 before:w-1.5 before:rounded-full before:bg-cyan-600 before:content-[""]'
-                      : 'bg-gray-200 text-gray-700'
+                  tag.type === "blue"
+                    ? "bg-cyan-100 text-cyan-800 dark:bg-cyan-950/50 dark:text-cyan-300"
+                    : tag.type === "status-blue"
+                      ? 'flex items-center gap-1 bg-cyan-100 text-cyan-800 before:h-1.5 before:w-1.5 before:rounded-full before:bg-cyan-600 before:content-[""] dark:bg-cyan-950/50 dark:text-cyan-300 dark:before:bg-cyan-400'
+                      : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
                 }`}
               >
                 {tag.text}
@@ -313,12 +327,12 @@ const DonorCard = ({ donor, userLocation }) => {
           target="_blank"
           rel="noopener noreferrer"
           onClick={(e) => {
-            if (mapUrl === '#') {
+            if (mapUrl === "#") {
               e.preventDefault();
-              alert('Location coordinates are unavailable for this donor.');
+              alert("Location coordinates are unavailable for this donor.");
             }
           }}
-          className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-gray-200 py-2.5 text-xs font-bold text-gray-700 transition-colors hover:bg-gray-50 md:text-sm"
+          className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-gray-200 py-2.5 text-xs font-bold text-gray-700 transition-colors hover:bg-gray-50 md:text-sm dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
         >
           Map Route
         </a>
@@ -326,15 +340,15 @@ const DonorCard = ({ donor, userLocation }) => {
           href={`https://wa.me/${validPhone}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-red-200 py-2.5 text-xs font-bold text-red-700 transition-colors hover:bg-red-50 md:text-sm"
+          className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-red-200 py-2.5 text-xs font-bold text-red-700 transition-colors hover:bg-red-50 md:text-sm dark:border-red-900/50 dark:text-red-400 dark:hover:bg-red-950/30"
         >
-          Message
+          {t("whatsappBtn", "WhatsApp")}
         </a>
         <a
           href={`tel:+${validPhone}`}
           className="flex w-full flex-none items-center justify-center gap-2 rounded-xl bg-[#D32F2F] py-2.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-red-800 md:w-32 md:text-sm lg:w-36"
         >
-          Call
+          {t("callBtn", "Call")}
         </a>
       </div>
     </div>
@@ -351,7 +365,7 @@ export default function SearchDonor() {
   const [error, setError] = useState(null);
 
   // Filter States
-  const [activeGroup, setActiveGroup] = useState('All');
+  const [activeGroup, setActiveGroup] = useState("All");
   const [distance, setDistance] = useState(500); // 👇 FIXED: Default 500km
 
   // 👇 NEW: Pagination States
@@ -372,11 +386,11 @@ export default function SearchDonor() {
         },
         (err) => {
           console.warn(
-            'User denied location. Distance filters will be disabled.'
+            "User denied location. Distance filters will be disabled.",
           );
           setUserLocation(false);
           setApplyTrigger((prev) => prev + 1);
-        }
+        },
       );
     } else {
       setUserLocation(false);
@@ -393,10 +407,10 @@ export default function SearchDonor() {
       setError(null);
 
       try {
-        let endpoint = '/users/';
+        let endpoint = "/users/";
         let params = { page: page, limit: 20 }; // Pass pagination limits
 
-        if (activeGroup !== 'All') {
+        if (activeGroup !== "All") {
           params.bloodType = activeGroup;
         }
 
@@ -410,7 +424,7 @@ export default function SearchDonor() {
           response.data.data?.donors || response.data.data?.users || [];
 
         // Manual Frontend Fallback Filter:
-        if (!userLocation && activeGroup !== 'All') {
+        if (!userLocation && activeGroup !== "All") {
           rawData = rawData.filter((u) => u.bloodType === activeGroup);
         }
 
@@ -430,15 +444,15 @@ export default function SearchDonor() {
             name: user.name,
             lat: lat,
             lng: lng,
-            phone: user.phone || user.mobileNumber || '+15551234567',
+            phone: user.phone || user.mobileNumber || "+15551234567",
             bloodType: user.bloodType,
             groupLabel: formatGroupLabel(user.bloodType),
             isOnline: user.isAvailable,
             tags: [
               user.isAvailable
-                ? { text: 'Available Now', type: 'status-blue' }
-                : { text: 'Unavailable', type: 'gray' },
-              { text: user.role?.toUpperCase() || 'DONOR', type: 'blue' },
+                ? { text: "Available Now", type: "status-blue" }
+                : { text: "Unavailable", type: "gray" },
+              { text: user.role?.toUpperCase() || "DONOR", type: "blue" },
             ],
           };
         });
@@ -451,16 +465,16 @@ export default function SearchDonor() {
                 userLocation.lat,
                 userLocation.lng,
                 a.lat,
-                a.lng
-              )
+                a.lng,
+              ),
             );
             const distB = parseFloat(
               calculateDistance(
                 userLocation.lat,
                 userLocation.lng,
                 b.lat,
-                b.lng
-              )
+                b.lng,
+              ),
             );
             return distA - distB;
           });
@@ -473,8 +487,8 @@ export default function SearchDonor() {
           setDonors((prev) => [...prev, ...mappedDonors]);
         }
       } catch (err) {
-        console.error('Error fetching donors:', err);
-        setError('Failed to load donors. Please try again later.');
+        console.error("Error fetching donors:", err);
+        setError("Failed to load donors. Please try again later.");
       } finally {
         setIsLoading(false);
       }
@@ -490,7 +504,7 @@ export default function SearchDonor() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#F4F5F7] pb-20 font-sans text-gray-900 md:pb-10 lg:bg-white">
+    <div className="relative min-h-screen bg-[#F4F5F7] pb-20 font-sans text-gray-900 md:pb-10 lg:bg-white dark:bg-[#090d16] lg:dark:bg-[#090d16] dark:text-slate-100 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-4 pt-6 md:px-8 md:pt-10">
         <Header />
 
@@ -516,7 +530,7 @@ export default function SearchDonor() {
               <p>
                 <span className="text-base font-bold text-gray-900">
                   {donors.length}
-                </span>{' '}
+                </span>{" "}
                 Compatible donors found
                 {!userLocation && (
                   <span className="ml-2 text-xs text-red-500">
@@ -574,7 +588,7 @@ export default function SearchDonor() {
                   <div className="mt-10 flex justify-center pb-8">
                     <button
                       onClick={() => setPage((prev) => prev + 1)}
-                      className="rounded-xl border border-gray-200 bg-white px-8 py-3.5 text-sm font-bold text-gray-700 shadow-sm transition-all hover:border-gray-300 hover:bg-gray-50 hover:text-[#D32F2F]"
+                      className="rounded-xl border border-gray-200 bg-white px-8 py-3.5 text-sm font-bold text-gray-700 shadow-sm transition-all hover:border-gray-300 hover:bg-gray-50 hover:text-[#D32F2F] dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-750"
                     >
                       Load More Donors
                     </button>
